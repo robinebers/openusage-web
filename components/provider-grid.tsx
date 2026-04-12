@@ -1,82 +1,64 @@
 import type { CSSProperties } from "react";
 
-import { plugins, displayColor } from "@/lib/plugins";
+import { plugins } from "@/lib/plugins";
 
 const splitIndex = Math.ceil(plugins.length / 2);
 const row1 = plugins.slice(0, splitIndex);
 const row2 = plugins.slice(splitIndex);
-const darkBrandColors = new Set(["#000000", "#020202", "#111111", "#2D2D2D"]);
 
-function getChipStyles(brandColor: string): {
-  color: string;
-  iconBackground: string;
-  borderColor: string;
-} {
-  const color = displayColor(brandColor);
-
-  return {
-    color,
-    iconBackground: darkBrandColors.has(brandColor)
-      ? "rgba(255, 255, 255, 0.12)"
-      : `${brandColor}20`,
-    borderColor: `${color}24`,
-  };
+function isDark(hex: string): boolean {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r + g + b) / 3 < 50;
 }
 
 function MarqueeRow({
   items,
-  direction,
-  duration,
+  variant,
+  reversed,
 }: {
   items: typeof plugins;
-  direction: "left" | "right";
-  duration: number;
+  variant: 1 | 2;
+  reversed: boolean;
 }) {
-  return (
-    <div className="marquee-fade">
-      <div
-        className={`marquee-track marquee-track--${direction}`}
-        style={{ animationDuration: `${duration}s` } as CSSProperties}
-      >
-        {[0, 1].map((copyIndex) => (
-          <div
-            key={copyIndex}
-            className="marquee-group flex shrink-0 gap-4"
-            aria-hidden={copyIndex === 1}
-          >
-            {items.map(({ id, name, brandColor, Icon }) => {
-              const chip = getChipStyles(brandColor);
+  const doubled = reversed ? [...items, ...items].reverse() : [...items, ...items];
 
-              return (
-                <div
-                  key={`${id}-${copyIndex}`}
-                  className="flex items-center gap-3 pl-2.5 pr-5 py-2 rounded-full shrink-0"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(24, 24, 24, 0.9), rgba(12, 12, 12, 0.88))",
-                    border: `1px solid ${chip.borderColor}`,
-                    boxShadow:
-                      "inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.02)",
-                  }}
-                >
-                  <div
-                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-                    style={{ background: chip.iconBackground }}
-                  >
-                    <Icon className="w-4 h-4" style={{ color: chip.color }} />
-                  </div>
-                  <span
-                    className="text-sm font-medium whitespace-nowrap"
-                    style={{ color: chip.color }}
-                  >
-                    {name}
-                  </span>
-                </div>
-              );
-            })}
+  return (
+    <div
+      className={`marquee-track flex gap-4 py-2 ${variant === 1 ? "marquee-track--slow" : ""}`}
+    >
+      {doubled.map(({ id, name, brandColor, Icon }, i) => {
+        const dark = isDark(brandColor);
+        const iconWell = dark ? "rgba(255,255,255,0.12)" : `${brandColor}20`;
+        const iconColor = dark ? "#ffffff" : brandColor;
+        const bgMix = variant === 1 ? "22%, transparent" : "18%, transparent";
+        const whiteMix = variant === 1 ? "0.03" : "0.02";
+        const insetMix = variant === 1 ? "35%" : "28%";
+
+        return (
+          <div
+            key={`${id}-${i}`}
+            className="flex shrink-0 items-center gap-3 rounded-2xl border border-white/[0.1] px-4 py-2.5 shadow-sm backdrop-blur-sm"
+            style={
+              {
+                background: `linear-gradient(135deg, color-mix(in oklab, ${brandColor} ${bgMix}), rgba(255,255,255,${whiteMix}))`,
+                boxShadow: `inset 0 1px 0 color-mix(in oklab, ${brandColor} ${insetMix}, transparent)`,
+              } as CSSProperties
+            }
+          >
+            <div
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg"
+              style={{ background: iconWell }}
+            >
+              <Icon className="h-4 w-4 shrink-0" style={{ color: iconColor }} />
+            </div>
+            <div className="min-w-0 truncate text-base font-semibold tracking-tight text-zinc-100 lg:text-lg">
+              {name}
+            </div>
           </div>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 }
@@ -84,15 +66,15 @@ function MarqueeRow({
 export function ProviderGrid() {
   return (
     <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
-      <div className="text-center mb-14">
+      <div className="text-center mb-8">
         <h2
-          className="text-3xl lg:text-4xl font-bold tracking-tight"
+          className="text-pretty text-3xl lg:text-4xl font-bold tracking-tight"
           style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
         >
           Works with Your Tools
         </h2>
         <p
-          className="mt-3 text-sm lg:text-base max-w-md mx-auto"
+          className="text-pretty mt-3 text-sm lg:text-base max-w-md mx-auto"
           style={{ color: "var(--page-fg-muted)" }}
         >
           Every provider is a plugin. Add what you use, ignore what you
@@ -100,9 +82,11 @@ export function ProviderGrid() {
         </p>
       </div>
 
-      <div className="space-y-4">
-        <MarqueeRow items={row1} direction="left" duration={30} />
-        <MarqueeRow items={row2} direction="right" duration={34} />
+      <div className="marquee-fade py-2">
+        <MarqueeRow items={row1} variant={1} reversed={false} />
+        <div className="marquee-row-2 -mt-1">
+          <MarqueeRow items={row2} variant={2} reversed />
+        </div>
       </div>
     </section>
   );

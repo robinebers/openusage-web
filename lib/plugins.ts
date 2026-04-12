@@ -27,24 +27,48 @@ export interface Plugin {
   featured: boolean;
 }
 
+/**
+ * brandColor from each `../openusage/plugins/<id>/plugin.json` (same keys as `id`).
+ * Factory has no upstream manifest yet; keep in sync with `--brand-factory` in `app/globals.css`.
+ */
+const PLUGIN_MANIFEST_BRAND = {
+  codex: "#74AA9C",
+  claude: "#DE7356",
+  cursor: "#000000",
+  copilot: "#A855F7",
+  antigravity: "#4285F4",
+  amp: "#F34E3F",
+  factory: "#020202",
+  gemini: "#4285F4",
+  "jetbrains-ai-assistant": "#7d5fe6",
+  kiro: "#C09CFF",
+  kimi: "#000000",
+  minimax: "#F5433C",
+  "opencode-go": "#000000",
+  perplexity: "#20808D",
+  synthetic: "#000000",
+  windsurf: "#111111",
+  zai: "#2D2D2D",
+} as const satisfies Record<string, string>;
+
 export const plugins: Plugin[] = [
-  { id: "codex",       name: "Codex",       brandColor: "#74AA9C", Icon: CodexIcon,       featured: true },
-  { id: "claude",      name: "Claude",      brandColor: "#DE7356", Icon: ClaudeIcon,      featured: true },
-  { id: "cursor",      name: "Cursor",      brandColor: "#000000", Icon: CursorIcon,      featured: true },
-  { id: "copilot",     name: "Copilot",     brandColor: "#A855F7", Icon: CopilotIcon,     featured: false },
-  { id: "antigravity", name: "Antigravity", brandColor: "#4285F4", Icon: AntigravityIcon, featured: false },
-  { id: "amp",         name: "Amp",         brandColor: "#F34E3F", Icon: AmpIcon,         featured: false },
-  { id: "factory",     name: "Factory",     brandColor: "#020202", Icon: FactoryIcon,     featured: false },
-  { id: "gemini",      name: "Gemini",      brandColor: "#4285F4", Icon: GeminiIcon,      featured: false },
-  { id: "jetbrains-ai-assistant", name: "JetBrains AI Assistant", brandColor: "#7d5fe6", Icon: JetBrainsAiAssistantIcon, featured: false },
-  { id: "kiro",        name: "Kiro",        brandColor: "#C09CFF", Icon: KiroIcon,        featured: false },
-  { id: "kimi",        name: "Kimi",        brandColor: "#000000", Icon: KimiIcon,        featured: false },
-  { id: "minimax",     name: "MiniMax",     brandColor: "#F5433C", Icon: MiniMaxIcon,     featured: false },
-  { id: "opencode-go", name: "OpenCode Go", brandColor: "#000000", Icon: OpenCodeGoIcon,  featured: false },
-  { id: "perplexity",  name: "Perplexity",  brandColor: "#20808D", Icon: PerplexityIcon,  featured: false },
-  { id: "synthetic",   name: "Synthetic",   brandColor: "#000000", Icon: SyntheticIcon,   featured: false },
-  { id: "windsurf",    name: "Windsurf",    brandColor: "#111111", Icon: WindsurfIcon,    featured: false },
-  { id: "zai",         name: "Z.ai",        brandColor: "#2D2D2D", Icon: ZaiIcon,         featured: false },
+  { id: "codex",       name: "Codex",       brandColor: PLUGIN_MANIFEST_BRAND.codex, Icon: CodexIcon,       featured: true },
+  { id: "claude",      name: "Claude",      brandColor: PLUGIN_MANIFEST_BRAND.claude, Icon: ClaudeIcon,      featured: true },
+  { id: "cursor",      name: "Cursor",      brandColor: PLUGIN_MANIFEST_BRAND.cursor, Icon: CursorIcon,      featured: true },
+  { id: "copilot",     name: "Copilot",     brandColor: PLUGIN_MANIFEST_BRAND.copilot, Icon: CopilotIcon,     featured: false },
+  { id: "antigravity", name: "Antigravity", brandColor: PLUGIN_MANIFEST_BRAND.antigravity, Icon: AntigravityIcon, featured: false },
+  { id: "amp",         name: "Amp",         brandColor: PLUGIN_MANIFEST_BRAND.amp, Icon: AmpIcon,         featured: false },
+  { id: "factory",     name: "Factory",     brandColor: PLUGIN_MANIFEST_BRAND.factory, Icon: FactoryIcon,     featured: false },
+  { id: "gemini",      name: "Gemini",      brandColor: PLUGIN_MANIFEST_BRAND.gemini, Icon: GeminiIcon,      featured: false },
+  { id: "jetbrains-ai-assistant", name: "JetBrains AI Assistant", brandColor: PLUGIN_MANIFEST_BRAND["jetbrains-ai-assistant"], Icon: JetBrainsAiAssistantIcon, featured: false },
+  { id: "kiro",        name: "Kiro",        brandColor: PLUGIN_MANIFEST_BRAND.kiro, Icon: KiroIcon,        featured: false },
+  { id: "kimi",        name: "Kimi",        brandColor: PLUGIN_MANIFEST_BRAND.kimi, Icon: KimiIcon,        featured: false },
+  { id: "minimax",     name: "MiniMax",     brandColor: PLUGIN_MANIFEST_BRAND.minimax, Icon: MiniMaxIcon,     featured: false },
+  { id: "opencode-go", name: "OpenCode Go", brandColor: PLUGIN_MANIFEST_BRAND["opencode-go"], Icon: OpenCodeGoIcon,  featured: false },
+  { id: "perplexity",  name: "Perplexity",  brandColor: PLUGIN_MANIFEST_BRAND.perplexity, Icon: PerplexityIcon,  featured: false },
+  { id: "synthetic",   name: "Synthetic",   brandColor: PLUGIN_MANIFEST_BRAND.synthetic, Icon: SyntheticIcon,   featured: false },
+  { id: "windsurf",    name: "Windsurf",    brandColor: PLUGIN_MANIFEST_BRAND.windsurf, Icon: WindsurfIcon,    featured: false },
+  { id: "zai",         name: "Z.ai",        brandColor: PLUGIN_MANIFEST_BRAND.zai, Icon: ZaiIcon,         featured: false },
 ];
 
 /**

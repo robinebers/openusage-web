@@ -188,14 +188,10 @@ body {
   color: white;
 }
 
-/* ── Marquee animations ── */
-@keyframes marquee-left {
+/* ── Marquee (seamless loop: duplicated content in markup) ── */
+@keyframes marquee-shift {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-50%, 0, 0); }
-}
-@keyframes marquee-right {
-  from { transform: translate3d(-50%, 0, 0); }
-  to { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 .marquee-track {
@@ -203,33 +199,26 @@ body {
   width: max-content;
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0);
+  animation: marquee-shift var(--marquee-duration, 48s) linear infinite;
 }
-.marquee-track--left { animation: marquee-left 30s linear infinite; }
-.marquee-track--right { animation: marquee-right 34s linear infinite; }
 
-.marquee-track:hover { animation-play-state: paused; }
 
+.marquee-track--slow { --marquee-duration: 64s; }
+
+.marquee-row-2 .marquee-track {
+  animation-duration: 56s;
+  animation-direction: reverse;
+  padding-left: 3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* Alpha mask fade — no color interpolation, just transparency */
 .marquee-fade {
   position: relative;
   overflow: hidden;
-  isolation: isolate;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 8%,
-    #000 92%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 8%,
-    #000 92%,
-    transparent
-  );
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
