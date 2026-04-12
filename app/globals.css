@@ -187,3 +187,49 @@ body {
   background: rgba(255, 255, 255, 0.15);
   color: white;
 }
+
+/* ── Marquee animations ── */
+@keyframes marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+.marquee-track--left { animation: marquee-left 30s linear infinite; }
+.marquee-track--right { animation: marquee-right 34s linear infinite; }
+
+.marquee-track:hover { animation-play-state: paused; }
+
+.marquee-fade {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
