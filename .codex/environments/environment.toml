@@ -3,12 +3,29 @@ version = 1
 name = "openusage-web"
 
 [setup]
-script = ""
+script = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Install dependencies
+bun install
+
+# Sync config directories from source tree into the worktree
+for d in .claude .codex .cursor; do
+  if [ -d "$CODEX_SOURCE_TREE_PATH/$d" ]; then
+    mkdir -p "$CODEX_WORKTREE_PATH/$d"
+    rsync -a "$CODEX_SOURCE_TREE_PATH/$d/." "$CODEX_WORKTREE_PATH/$d/"
+  fi
+done
+
+# Copy local env file if it exists in the source tree
+if [ -f "$CODEX_SOURCE_TREE_PATH/.env.local" ]; then
+  cp "$CODEX_SOURCE_TREE_PATH/.env.local" "$CODEX_WORKTREE_PATH/.env.local"
+fi
+
+'''
 
 [[actions]]
-name = "Run"
+name = "Dev Server"
 icon = "run"
-command = '''
-bun install
-bun dev
-'''
+command = "bun run dev"
