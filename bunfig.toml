@@ -1,2 +1,4 @@
 [install]
 minimumReleaseAge = 604800
+# Allow lockfile updates in this repo (global ~/.bunfig.toml sets frozenLockfile = true).
+frozenLockfile = false
