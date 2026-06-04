@@ -136,6 +136,68 @@ export const providers: Provider[] = [
       },
     ],
   },
+  {
+    id: "grok",
+    name: "Grok",
+    planBadge: "SuperGrok",
+    brandColor: "#000000",
+    overviewMetrics: [
+      {
+        label: "Credits used",
+        percent: 41,
+        primaryValue: "41% used",
+        secondaryValue: "Resets in 6d 2h",
+        pace: "on-track",
+      },
+    ],
+    detailMetrics: [
+      {
+        label: "Credits used",
+        percent: 41,
+        primaryValue: "41% used",
+        secondaryValue: "Resets in 6d 2h",
+        pace: "on-track",
+      },
+      {
+        label: "Pay as you go",
+        percent: 18,
+        primaryValue: "$9.00 used",
+        secondaryValue: "$50 cap",
+        pace: "ahead",
+      },
+    ],
+  },
+  {
+    id: "devin",
+    name: "Devin",
+    planBadge: "Core",
+    brandColor: "#000000",
+    overviewMetrics: [
+      {
+        label: "Weekly quota",
+        percent: 64,
+        primaryValue: "64% left",
+        secondaryValue: "Resets in 3d 4h",
+        pace: "on-track",
+      },
+    ],
+    detailMetrics: [
+      {
+        label: "Weekly quota",
+        percent: 64,
+        primaryValue: "64% left",
+        secondaryValue: "Resets in 3d 4h",
+        pace: "on-track",
+      },
+      {
+        label: "Extra usage balance",
+        percent: 62,
+        primaryValue: "$18.50 left",
+        secondaryValue: "$30 monthly",
+        pace: "on-track",
+      },
+    ],
+  },
 ];
 
 /** Primary metric percent per provider for the tray icon mini bars */
@@ -143,4 +205,6 @@ export const trayBarData = [
   { percent: 73, label: "Codex" },
   { percent: 42, label: "Claude" },
   { percent: 67, label: "Cursor" },
+  { percent: 41, label: "Grok" },
+  { percent: 64, label: "Devin" },
 ];

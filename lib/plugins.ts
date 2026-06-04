@@ -3,7 +3,8 @@ import {
   ClaudeIcon,
   CursorIcon,
   CopilotIcon,
-  WindsurfIcon,
+  DevinIcon,
+  GrokIcon,
   AntigravityIcon,
   AmpIcon,
   KimiIcon,
@@ -38,8 +39,10 @@ const PLUGIN_MANIFEST_BRAND = {
   copilot: "#A855F7",
   antigravity: "#4285F4",
   amp: "#F34E3F",
+  devin: "#000000",
   factory: "#020202",
   gemini: "#4285F4",
+  grok: "#000000",
   "jetbrains-ai-assistant": "#7d5fe6",
   kiro: "#C09CFF",
   kimi: "#000000",
@@ -47,7 +50,6 @@ const PLUGIN_MANIFEST_BRAND = {
   "opencode-go": "#000000",
   perplexity: "#20808D",
   synthetic: "#000000",
-  windsurf: "#111111",
   zai: "#2D2D2D",
 } as const satisfies Record<string, string>;
 
@@ -58,8 +60,10 @@ export const plugins: Plugin[] = [
   { id: "copilot",     name: "Copilot",     brandColor: PLUGIN_MANIFEST_BRAND.copilot, Icon: CopilotIcon,     featured: false },
   { id: "antigravity", name: "Antigravity", brandColor: PLUGIN_MANIFEST_BRAND.antigravity, Icon: AntigravityIcon, featured: false },
   { id: "amp",         name: "Amp",         brandColor: PLUGIN_MANIFEST_BRAND.amp, Icon: AmpIcon,         featured: false },
+  { id: "devin",       name: "Devin",       brandColor: PLUGIN_MANIFEST_BRAND.devin, Icon: DevinIcon,       featured: false },
   { id: "factory",     name: "Factory",     brandColor: PLUGIN_MANIFEST_BRAND.factory, Icon: FactoryIcon,     featured: false },
   { id: "gemini",      name: "Gemini",      brandColor: PLUGIN_MANIFEST_BRAND.gemini, Icon: GeminiIcon,      featured: false },
+  { id: "grok",        name: "Grok",        brandColor: PLUGIN_MANIFEST_BRAND.grok, Icon: GrokIcon,        featured: false },
   { id: "jetbrains-ai-assistant", name: "JetBrains AI Assistant", brandColor: PLUGIN_MANIFEST_BRAND["jetbrains-ai-assistant"], Icon: JetBrainsAiAssistantIcon, featured: false },
   { id: "kiro",        name: "Kiro",        brandColor: PLUGIN_MANIFEST_BRAND.kiro, Icon: KiroIcon,        featured: false },
   { id: "kimi",        name: "Kimi",        brandColor: PLUGIN_MANIFEST_BRAND.kimi, Icon: KimiIcon,        featured: false },
@@ -67,7 +71,6 @@ export const plugins: Plugin[] = [
   { id: "opencode-go", name: "OpenCode Go", brandColor: PLUGIN_MANIFEST_BRAND["opencode-go"], Icon: OpenCodeGoIcon,  featured: false },
   { id: "perplexity",  name: "Perplexity",  brandColor: PLUGIN_MANIFEST_BRAND.perplexity, Icon: PerplexityIcon,  featured: false },
   { id: "synthetic",   name: "Synthetic",   brandColor: PLUGIN_MANIFEST_BRAND.synthetic, Icon: SyntheticIcon,   featured: false },
-  { id: "windsurf",    name: "Windsurf",    brandColor: PLUGIN_MANIFEST_BRAND.windsurf, Icon: WindsurfIcon,    featured: false },
   { id: "zai",         name: "Z.ai",        brandColor: PLUGIN_MANIFEST_BRAND.zai, Icon: ZaiIcon,         featured: false },
 ];
 

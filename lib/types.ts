@@ -1,6 +1,6 @@
 export type PaceStatus = "ahead" | "on-track" | "behind";
 
-export type ProviderId = "codex" | "claude" | "cursor";
+export type ProviderId = "codex" | "claude" | "cursor" | "grok" | "devin";
 
 export interface MetricLine {
   label: string;

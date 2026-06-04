@@ -2,7 +2,7 @@
 
 import type { ActiveView, ProviderId } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { GaugeIcon, SettingsIcon, CodexIcon, ClaudeIcon, CursorIcon, CopilotIcon, WindsurfIcon, AntigravityIcon } from "@/lib/icons";
+import { GaugeIcon, SettingsIcon, CodexIcon, ClaudeIcon, CursorIcon, GrokIcon, DevinIcon } from "@/lib/icons";
 import { track } from "@vercel/analytics";
 
 const providerNav: {
@@ -13,6 +13,8 @@ const providerNav: {
   { id: "codex", Icon: CodexIcon, brandColor: "var(--brand-codex)" },
   { id: "claude", Icon: ClaudeIcon, brandColor: "var(--brand-claude)" },
   { id: "cursor", Icon: CursorIcon, brandColor: "var(--brand-cursor)" },
+  { id: "grok", Icon: GrokIcon, brandColor: "var(--brand-grok)" },
+  { id: "devin", Icon: DevinIcon, brandColor: "var(--brand-devin)" },
 ];
 
 export function Sidebar({
@@ -53,30 +55,6 @@ export function Sidebar({
           />
         </NavButton>
       ))}
-
-      {/* Copilot — visible but not navigable */}
-      <button
-        className="w-full p-2.5 flex items-center justify-center"
-        onClick={() => track("panel_tab_clicked", { tab: "copilot" })}
-      >
-        <CopilotIcon className="w-6 h-6" style={{ color: "var(--brand-copilot)" }} />
-      </button>
-
-      {/* Windsurf — visible but not navigable */}
-      <button
-        className="w-full p-2.5 flex items-center justify-center"
-        onClick={() => track("panel_tab_clicked", { tab: "windsurf" })}
-      >
-        <WindsurfIcon className="w-6 h-6" style={{ color: "var(--brand-windsurf)" }} />
-      </button>
-
-      {/* Antigravity — visible but not navigable */}
-      <button
-        className="w-full p-2.5 flex items-center justify-center"
-        onClick={() => track("panel_tab_clicked", { tab: "antigravity" })}
-      >
-        <AntigravityIcon className="w-6 h-6" style={{ color: "var(--brand-antigravity)" }} />
-      </button>
 
       {/* Spacer */}
       <div className="flex-1" />
