@@ -51,15 +51,18 @@ const response = `[
         "used": 7,
         "limit": 100,
         "format": { "kind": "percent" },
-        "resetsAt": "2026-03-31T08:00:00Z"
+        "resetsAt": "2026-03-31T08:00:00.000Z",
+        "color": null
       },
       {
         "type": "text",
         "label": "Today",
-        "value": "$1.33 \u00b7 4.6M tokens"
+        "value": "$1.33 \u00b7 4.6M tokens",
+        "color": null,
+        "subtitle": null
       }
     ],
-    "fetchedAt": "2026-03-31T05:19:39Z"
+    "fetchedAt": "2026-03-31T05:19:39.000Z"
   }
 ]`;
 

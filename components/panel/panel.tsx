@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useState, useCallback } from "react";
 import { LayoutGroup, motion } from "motion/react";
 import { useDemoSections, useLayoutReady } from "@/lib/demo-timeline";
 import { ProviderSection } from "./provider-section";
@@ -11,79 +10,30 @@ const SECTION_TRANSITION = {
   ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
 };
 
-const PANEL_W = 320;
-
 interface PanelProps {
   version: string | null;
-  /** Which tray element to anchor the panel to (defaults to "tray-icon"). */
-  trayIconId?: string;
-  /** "absolute" (default) = desktop overlay; "flow" = inline in document flow. */
+  /** "absolute" (default) = desktop overlay (fixed 320px, positioned by the
+   *  tray icon via CSS); "flow" = inline mobile (fluid up to 320px). */
   placement?: "absolute" | "flow";
 }
 
-export function Panel({ version, trayIconId = "tray-icon", placement = "absolute" }: PanelProps) {
-  const [panelRight, setPanelRight] = useState<number | null>(null);
-
-  const isFlow = placement === "flow";
-
-  const measure = useCallback(() => {
-    if (isFlow) return; // inline (mobile): sits in document flow, no positioning
-
-    const tray = document.getElementById(trayIconId);
-    if (!tray) return;
-
-    const trayRect = tray.getBoundingClientRect();
-    const trayCenterX = trayRect.left + trayRect.width / 2;
-
-    const MIN_RIGHT_PAD = 12;
-    const viewportW = window.innerWidth;
-
-    const idealRight = viewportW - trayCenterX - PANEL_W / 2;
-    const clampedRight = Math.max(MIN_RIGHT_PAD, idealRight);
-    setPanelRight(clampedRight);
-  }, [trayIconId, isFlow]);
-
-  useLayoutEffect(() => {
-    // Measure DOM geometry and position the panel before paint, so it never
-    // flashes at the wrong spot. setState-in-layout-effect is the intended
-    // pattern here (we're syncing React to a measured layout, not a render loop).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    measure();
-    requestAnimationFrame(() => requestAnimationFrame(measure));
-  }, [measure]);
-
-  useEffect(() => {
-    document.fonts.ready.then(measure);
-
-    let timer: ReturnType<typeof setTimeout>;
-    const onResize = () => {
-      clearTimeout(timer);
-      timer = setTimeout(measure, 80);
-    };
-    window.addEventListener("resize", onResize);
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", onResize);
-    };
-  }, [measure]);
-
+/**
+ * The popover content only — it carries no positioning. Desktop anchors it
+ * under the tray icon with pure CSS (see menu-bar.tsx) and mobile drops it in
+ * document flow, so it renders visible in the server HTML and never waits on
+ * client-side JS/measurement to appear.
+ */
+export function Panel({ version, placement = "absolute" }: PanelProps) {
   const sections = useDemoSections();
   const layoutReady = useLayoutReady();
 
-  const widthClass = isFlow ? "w-full max-w-[320px]" : "w-[320px]";
-  const measured = isFlow ? true : panelRight != null;
+  const widthClass = placement === "flow" ? "w-full max-w-[320px]" : "w-[320px]";
 
   return (
-    <div
-      className={`panel flex flex-col items-end pt-2${isFlow ? " w-full max-w-[320px]" : ""}`}
-      style={{
-        ...(isFlow ? {} : { marginRight: panelRight ?? 16 }),
-        opacity: measured ? 1 : 0,
-      }}
-    >
+    <div className={`panel ${widthClass} text-foreground`}>
       {/* Popover container — mirrors the native app */}
       <div
-        className={`panel-box rounded-2xl overflow-hidden ${widthClass} bg-card border border-border`}
+        className="panel-box w-full overflow-hidden rounded-2xl border border-border bg-card"
         style={{
           fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
           boxShadow:
@@ -96,11 +46,10 @@ export function Panel({ version, trayIconId = "tray-icon", placement = "absolute
                 mounts (it's stored on an internal projection node), so flipping
                 `layout` false→true later updates React but NOT that stored
                 setting — slides stay off forever. Keying this wrapper on
-                `layoutReady` remounts the rows/sections once the popover has
-                settled, giving them fresh projection nodes with layout enabled.
-                That's what makes reorders (Weekly/Session, provider swaps)
-                actually slide instead of jump, while still avoiding a slide-in
-                on load. */}
+                `layoutReady` remounts the rows/sections once fonts have settled,
+                giving them fresh projection nodes with layout enabled. That's
+                what makes reorders (Weekly/Session, provider swaps) actually
+                slide instead of jump, while still avoiding a slide-in on load. */}
             <div key={layoutReady ? "live" : "init"} className="flex flex-col gap-3.5">
               {sections.map((provider) => (
                 <motion.div

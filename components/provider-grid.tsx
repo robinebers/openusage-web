@@ -4,11 +4,11 @@ export function ProviderGrid() {
   return (
     <section className="mx-auto max-w-5xl px-6 py-16 lg:px-12 lg:py-24">
       <div className="mb-12 text-center">
-        <h2 className="text-pretty text-3xl font-bold tracking-tight lg:text-4xl">
-          Built for your AI coding stack
+        <h2 className="text-balance text-3xl font-bold tracking-tight lg:text-4xl">
+          Built for Your AI Coding Stack
         </h2>
         <p
-          className="text-pretty mx-auto mt-3 max-w-md text-sm lg:text-base"
+          className="text-balance mx-auto mt-3 max-w-md text-sm lg:text-base"
           style={{ color: "var(--page-fg-muted)" }}
         >
           Track the subscriptions you actually pay for, all in one menu bar.

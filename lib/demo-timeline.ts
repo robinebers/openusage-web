@@ -1,8 +1,8 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { Provider, StripGroup } from "./types";
-import { PROVIDER_META, ROWS, stripGroups, type DemoProviderId } from "./mock-data";
+import type { MeterRow, Provider, StripGroup } from "./types";
+import { PROVIDER_META, ROWS, type DemoProviderId } from "./mock-data";
 
 interface Frame {
   /** Section order, top to bottom (also drives the menu-bar order). */
@@ -127,10 +127,19 @@ export function useDemoSections(): Provider[] {
   }));
 }
 
-/** Ordered menu-bar strip groups, matching the section order. */
+/** Ordered menu-bar strip groups. Mirrors both the section order AND each
+ *  provider's current row order, so the tray's stacked percentages reorder in
+ *  lock-step with the popover (e.g. when Weekly moves above Session). The tray
+ *  shows the meter rows; each meter's `percent` is the single source of truth. */
 export function useDemoStripGroups(): StripGroup[] {
   const frame = useFrame();
-  return frame.order.map((id) => stripGroups[id]);
+  return frame.order.map((id) => ({
+    id,
+    values: frame.rows[id]
+      .map((key) => ROWS[id][key])
+      .filter((row): row is MeterRow => row?.kind === "meter")
+      .map((row) => `${row.percent}%`),
+  }));
 }
 
 // ── Initial layout settle ───────────────────────────────────────────────────

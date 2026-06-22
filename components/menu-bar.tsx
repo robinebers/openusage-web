@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { motion } from "motion/react";
 import {
   AppleIcon,
@@ -13,6 +13,7 @@ import {
   GrokIcon,
 } from "@/lib/icons";
 import { useDemoStripGroups, useLayoutReady } from "@/lib/demo-timeline";
+import { Panel } from "@/components/panel/panel";
 import type { ProviderId } from "@/lib/types";
 
 const STRIP_TRANSITION = {
@@ -48,12 +49,14 @@ function StripValues({ values }: { values: string[] }) {
   );
 }
 
-/** The OpenUsage menu-bar strip: a bold provider glyph + values per provider. */
-function MenuBarStrip({ id = "tray-icon" }: { id?: string }) {
+/** The OpenUsage menu-bar strip: a bold provider glyph + values per provider.
+ *  `popover`, when given, is anchored directly below the strip with pure CSS so
+ *  the panel renders in place (no JS measurement, visible on first paint). */
+function MenuBarStrip({ id = "tray-icon", popover }: { id?: string; popover?: ReactNode }) {
   const groups = useDemoStripGroups();
   const layoutReady = useLayoutReady();
   return (
-    <div id={id} className="flex items-center gap-3.5 select-none">
+    <div id={id} className="relative flex items-center gap-3.5 select-none">
       {groups.map((group) => {
         const Icon = STRIP_ICONS[group.id];
         return (
@@ -70,6 +73,11 @@ function MenuBarStrip({ id = "tray-icon" }: { id?: string }) {
           </motion.div>
         );
       })}
+      {popover && (
+        <div className="absolute left-1/2 top-full z-50 mt-[11px] -translate-x-1/2">
+          {popover}
+        </div>
+      )}
     </div>
   );
 }
@@ -128,7 +136,7 @@ function TimeDisplay() {
   );
 }
 
-export function MenuBar() {
+export function MenuBar({ version }: { version: string | null }) {
   return (
     <div
       className="w-full h-[28px] flex items-center justify-between px-4 select-none"
@@ -150,16 +158,20 @@ export function MenuBar() {
         <span className="text-[13px] opacity-60">Help</span>
       </div>
 
-      {/* Right: OpenUsage strip first, then system icons, then date/time */}
-      <MenuBarTray />
+      {/* Right: OpenUsage strip first, then system icons, then date/time.
+          The popover hangs off the strip so it's positioned purely by CSS. */}
+      <MenuBarTray popover={<Panel version={version} placement="absolute" />} />
     </div>
   );
 }
 
-export function MenuBarTray({ trayIconId }: { trayIconId?: string } = {}) {
+export function MenuBarTray({
+  trayIconId,
+  popover,
+}: { trayIconId?: string; popover?: ReactNode } = {}) {
   return (
     <div className="flex items-center gap-[10px]">
-      <MenuBarStrip id={trayIconId} />
+      <MenuBarStrip id={trayIconId} popover={popover} />
       <WifiIcon className="h-[11px] w-auto opacity-85" />
       <BatteryIcon className="w-[24px] h-[11px] opacity-85" />
       <ControlCenterIcon className="h-[11px] w-auto opacity-85" />

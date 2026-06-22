@@ -57,22 +57,19 @@ export default async function Home() {
 
       {/* ── Menu bar + hero wrapper (positioning context for panel) ── */}
       <div className="relative" style={{ zIndex: 1 }}>
-        {/* Full macOS menu bar — desktop only */}
+        {/* Full macOS menu bar — desktop only. The popover hangs off the tray
+            icon inside the bar, so it's positioned by CSS (no JS measurement)
+            and renders visible in the server HTML. */}
         <div className="max-lg:hidden">
-          <MenuBar />
+          <MenuBar version={version} />
         </div>
 
         {/* Hero: just the marketing content */}
-        <section className="max-w-7xl mx-auto px-6 lg:px-12 lg:pr-[380px]">
+        <section className="max-w-7xl mx-auto px-6 lg:px-12 lg:pr-[380px] 2xl:pr-[340px]">
           <div className="lg:min-h-[600px]">
             <HeroContent />
           </div>
         </section>
-
-        {/* Panel: absolutely positioned, aligned to tray icon (desktop) */}
-        <div className="absolute top-[28px] right-0 max-lg:hidden">
-          <Panel version={version} />
-        </div>
 
         {/* Mobile: tray bar + panel below hero */}
         <div className="lg:hidden flex flex-col items-center md:items-end pb-12">
@@ -89,7 +86,7 @@ export default async function Home() {
           </div>
           {/* Panel, flow-positioned below the tray bar */}
           <div className="px-3 md:px-12 w-full flex flex-col items-center md:items-end">
-            <Panel version={version} trayIconId="tray-icon-mobile" placement="flow" />
+            <Panel version={version} placement="flow" />
           </div>
         </div>
       </div>
@@ -117,7 +114,7 @@ export default async function Home() {
                 One Signal. Every Screen.
               </h2>
               <p
-                className="text-sm lg:text-base leading-relaxed text-pretty"
+                className="text-sm lg:text-base leading-relaxed text-balance"
                 style={{ color: "var(--page-fg-muted)" }}
               >
                 Think of it like a weather station. OpenUsage does all the
@@ -171,7 +168,7 @@ export default async function Home() {
             Never Wonder Again
           </h2>
           <p
-            className="mt-3 text-sm lg:text-base max-w-lg text-pretty"
+            className="mt-3 text-sm lg:text-base max-w-lg text-balance"
             style={{ color: "var(--page-fg-muted)" }}
           >
             Everything you need to build without token anxiety.
@@ -221,7 +218,7 @@ export default async function Home() {
               Truly Open Source
             </h2>
             <p
-              className="text-sm lg:text-base leading-relaxed text-pretty"
+              className="text-sm lg:text-base leading-relaxed text-balance"
               style={{ color: "var(--page-fg-muted)" }}
             >
               A native macOS app built with Swift and SwiftUI, and fully built
@@ -287,7 +284,7 @@ export default async function Home() {
           Never Get Cut Off by Surprise.
         </h2>
         <p
-          className="text-sm lg:text-base mb-8 max-w-md mx-auto text-pretty"
+          className="text-sm lg:text-base mb-8 max-w-md mx-auto text-balance"
           style={{ color: "var(--page-fg-muted)" }}
         >
           Download OpenUsage for macOS. It&apos;s free, and you&apos;ll

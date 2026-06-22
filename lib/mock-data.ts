@@ -1,4 +1,4 @@
-import type { MetricRow, StripGroup } from "./types";
+import type { MetricRow } from "./types";
 
 /** The three providers the demo popover cycles through. */
 export type DemoProviderId = "claude" | "codex" | "cursor";
@@ -37,14 +37,7 @@ export const ROWS: Record<DemoProviderId, Record<string, MetricRow>> = {
   },
   cursor: {
     plan: { kind: "meter", label: "Plan usage", percent: 67, headline: "67% left", trailing: "Resets in 8d 9h" },
-    auto: { kind: "text", label: "Auto usage", value: "$10.00 used", info: true },
+    auto: { kind: "meter", label: "Auto usage", percent: 45, headline: "45% left", trailing: "Resets in 8d 9h" },
     today: { kind: "text", label: "Today", value: "$7.05 · 6.2M tokens", info: true },
   },
-};
-
-/** Menu-bar strip values per provider (matches the native tray). */
-export const stripGroups: Record<DemoProviderId, StripGroup> = {
-  claude: { id: "claude", values: ["100%", "81%"] },
-  codex: { id: "codex", values: ["99%", "63%"] },
-  cursor: { id: "cursor", values: ["67%", "$10"] },
 };

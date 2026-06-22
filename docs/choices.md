@@ -70,3 +70,28 @@
   - Grok: "Credits used" progress + "Pay as you go" cap (plan badge `SuperGrok`).
   - Devin: "Weekly quota" + "Daily quota" progress + "Extra usage balance" (plan badge `Core`).
 - Added Grok + Devin to `trayBarData` so the menu-bar tray icon reflects all tracked providers (5 bars).
+
+## 2026-06-22
+
+### Real root cause of "reorder rows don't animate" (Weekly/Session swap)
+
+- Supersedes the 2026-06-?? "split height vs layout onto nested nodes" note above — that hypothesis (height as a positional key) was wrong and that approach was reverted. Rows are back to a single `motion.div` per row inside `AnimatePresence mode="popLayout"`.
+- Actual cause: motion bakes the `layout` setting into each element's projection node **once, at mount** (`framer-motion .../use-visual-element.mjs` → `createProjectionNode` reads `props.layout` and sets it on the node). Our `layout={layoutReady}` mounts every row/section/tray icon with `layout: false` (to avoid a slide-in while the popover settles), then flips the prop to `true`. Flipping updates React but NOT the stored projection option — when `MeasureLayout` finally mounts it spreads the stale options back (`{ ...projection.options }`), so `layout` stays `false` forever. Result: position/slide (layout) animations never turn on; only opacity fades (a separate system) work. That's why enter/exit looked fine but pure reorders (Weekly/Session, provider swaps, the menu-bar tray swap) jumped.
+- Fix: remount the animated subtrees the moment `layoutReady` flips, so motion rebuilds the projection nodes with `layout` enabled. `components/panel/panel.tsx` keys the sections wrapper `key={layoutReady ? "live" : "init"}` (remounts sections + rows); `components/menu-bar.tsx` uses a compound key `${group.id}-${layoutReady ? "live" : "init"}`. Because the remount happens after the popover has settled, there's still no slide-in on load. `tsc` + `lint` pass.
+
+### Cursor "Auto usage" → meter (bar)
+
+- Was a `text` row with value `"$10.00 used"` (the user flagged it as invalid — Auto usage is a bar like Plan usage). Changed `ROWS.cursor.auto` to `kind: "meter"`, `percent: 45`, `"45% left"`, `"Resets in 8d 9h"` (same reset cycle as Plan). 45% is an opinionated value chosen to read distinctly next to Plan's 67%.
+- Updated `stripGroups.cursor` tray value `"$10"` → `"45%"` so the menu-bar tray matches the popover and the other providers' two-percent tray format.
+
+### Footer version: stable-only, never hardcoded/beta (Bugbot)
+
+- `components/panel/panel-footer.tsx` was `OpenUsage {version ?? "0.7.0-beta.11"}` — when `getVersion()` returned `null` it showed a hardcoded beta that may not be the real latest build.
+- User rule: footer must never show "beta anything", nothing hardcoded; fallback is a bare "OpenUsage" with no version.
+- Fix: `stableVersion = version && !version.includes("-") ? version : null` (semver pre-release = has a hyphen), render `OpenUsage{stableVersion ? \` ${stableVersion}\` : ""}`. So it shows a real *stable* release when one exists, otherwise just "OpenUsage". Right now (latest is `v0.7.0-beta.*`) it renders "OpenUsage". No hardcoded string remains.
+
+### Menu-bar tray reorders in lock-step with the popover (Bugbot)
+
+- `useDemoStripGroups` returned the static `stripGroups[id]`, so tray percentages stayed Session-then-Weekly while the popover swapped Weekly above Session (F2/F3) — the two surfaces contradicted each other mid-animation.
+- Fix (`lib/demo-timeline.ts`): derive tray values from the live frame — map `frame.rows[id]` → `ROWS[id][key]`, keep `kind === "meter"`, emit `` `${percent}%` ``. Each provider has exactly two meter rows in every frame, so tray count stays stable at 2 and the order now follows the popover.
+- Removed the now-dead `stripGroups` (and its `StripGroup` import) from `lib/mock-data.ts`; `ROWS` (meter `percent`) is the single source of truth for tray + popover. The two stacked tray numbers are positional (`StripValues` keys by index), so the swap is a text update, not a slide — matches the native tray; `tsc` passes.

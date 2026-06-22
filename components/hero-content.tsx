@@ -7,7 +7,7 @@ import { track } from "@vercel/analytics";
 
 export function HeroContent() {
   return (
-    <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl">
+    <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl 2xl:max-w-none">
       {/* Logo */}
       <div className="flex items-center gap-2">
         <GaugeIcon className="w-5 h-5" style={{ color: "var(--page-fg)" }} />
@@ -28,7 +28,7 @@ export function HeroContent() {
 
       {/* Tagline */}
       <p
-        className="text-sm sm:text-base lg:text-lg leading-relaxed text-pretty"
+        className="text-sm sm:text-base lg:text-lg leading-relaxed text-balance 2xl:max-w-xl"
         style={{ color: "var(--page-fg-muted)" }}
       >
         Track and customize the exact metrics and subscriptions that matter to you. Keep them at a glance in the menu bar. Just open the app, make it yours, and never look back.
