@@ -1,210 +1,50 @@
-import type { Provider } from "./types";
+import type { MetricRow, StripGroup } from "./types";
 
-export const providers: Provider[] = [
-  {
-    id: "codex",
-    name: "Codex",
-    planBadge: "Pro",
-    brandColor: "#74aa9c",
-    overviewMetrics: [
-      {
-        label: "Session",
-        percent: 73,
-        primaryValue: "73% left",
-        secondaryValue: "Resets in 2h 18m",
-        pace: "on-track",
-      },
-      {
-        label: "Weekly",
-        percent: 91,
-        primaryValue: "91% left",
-        secondaryValue: "Resets in 4d 7h",
-        pace: "ahead",
-      },
-    ],
-    detailMetrics: [
-      {
-        label: "Session",
-        percent: 73,
-        primaryValue: "73% left",
-        secondaryValue: "Resets in 2h 18m",
-        pace: "on-track",
-      },
-      {
-        label: "Weekly",
-        percent: 91,
-        primaryValue: "91% left",
-        secondaryValue: "Resets in 4d 7h",
-        pace: "ahead",
-      },
-      {
-        label: "Reviews",
-        percent: 58,
-        primaryValue: "58% left",
-        secondaryValue: "Resets in 4d 7h",
-        pace: "on-track",
-      },
-      {
-        label: "Extra usage",
-        percent: 75,
-        primaryValue: "$12.40 used",
-        secondaryValue: "$50 limit",
-        pace: "on-track",
-      },
-    ],
-  },
-  {
-    id: "claude",
-    name: "Claude",
-    planBadge: "Max",
-    brandColor: "#de7356",
-    overviewMetrics: [
-      {
-        label: "Session",
-        percent: 100,
-        primaryValue: "100% left",
-        secondaryValue: "Resets in 4h 31m",
-        pace: "ahead",
-      },
-      {
-        label: "Weekly",
-        percent: 42,
-        primaryValue: "42% left",
-        secondaryValue: "Resets in 1d 19h",
-        pace: "behind",
-      },
-    ],
-    detailMetrics: [
-      {
-        label: "Session",
-        percent: 100,
-        primaryValue: "100% left",
-        secondaryValue: "Resets in 4h 31m",
-        pace: "ahead",
-      },
-      {
-        label: "Weekly",
-        percent: 42,
-        primaryValue: "42% left",
-        secondaryValue: "Resets in 1d 19h",
-        pace: "behind",
-      },
-      {
-        label: "Sonnet",
-        percent: 78,
-        primaryValue: "78% left",
-        secondaryValue: "Resets in 1d 19h",
-        pace: "on-track",
-      },
-      {
-        label: "Extra usage",
-        percent: 79,
-        primaryValue: "$4.20 used",
-        secondaryValue: "$20 limit",
-        pace: "ahead",
-      },
-    ],
-  },
-  {
-    id: "cursor",
-    name: "Cursor",
-    planBadge: "Ultra",
-    brandColor: "#000000",
-    overviewMetrics: [
-      {
-        label: "Plan usage",
-        percent: 67,
-        primaryValue: "$167.78 left",
-        secondaryValue: "Resets in 8d 9h",
-        pace: "ahead",
-      },
-    ],
-    detailMetrics: [
-      {
-        label: "Plan usage",
-        percent: 67,
-        primaryValue: "$167.78 left",
-        secondaryValue: "Resets in 8d 9h",
-        pace: "ahead",
-      },
-      {
-        label: "On-demand",
-        percent: 3,
-        primaryValue: "$487.50 left",
-        secondaryValue: "$500 limit",
-        pace: "ahead",
-      },
-    ],
-  },
-  {
-    id: "grok",
-    name: "Grok",
-    planBadge: "SuperGrok",
-    brandColor: "#000000",
-    overviewMetrics: [
-      {
-        label: "Credits used",
-        percent: 41,
-        primaryValue: "41% used",
-        secondaryValue: "Resets in 6d 2h",
-        pace: "on-track",
-      },
-    ],
-    detailMetrics: [
-      {
-        label: "Credits used",
-        percent: 41,
-        primaryValue: "41% used",
-        secondaryValue: "Resets in 6d 2h",
-        pace: "on-track",
-      },
-      {
-        label: "Pay as you go",
-        percent: 18,
-        primaryValue: "$9.00 used",
-        secondaryValue: "$50 cap",
-        pace: "ahead",
-      },
-    ],
-  },
-  {
-    id: "devin",
-    name: "Devin",
-    planBadge: "Core",
-    brandColor: "#000000",
-    overviewMetrics: [
-      {
-        label: "Weekly quota",
-        percent: 64,
-        primaryValue: "64% left",
-        secondaryValue: "Resets in 3d 4h",
-        pace: "on-track",
-      },
-    ],
-    detailMetrics: [
-      {
-        label: "Weekly quota",
-        percent: 64,
-        primaryValue: "64% left",
-        secondaryValue: "Resets in 3d 4h",
-        pace: "on-track",
-      },
-      {
-        label: "Extra usage balance",
-        percent: 62,
-        primaryValue: "$18.50 left",
-        secondaryValue: "$30 monthly",
-        pace: "on-track",
-      },
-    ],
-  },
-];
+/** The three providers the demo popover cycles through. */
+export type DemoProviderId = "claude" | "codex" | "cursor";
 
-/** Primary metric percent per provider for the tray icon mini bars */
-export const trayBarData = [
-  { percent: 73, label: "Codex" },
-  { percent: 42, label: "Claude" },
-  { percent: 67, label: "Cursor" },
-  { percent: 41, label: "Grok" },
-  { percent: 64, label: "Devin" },
-];
+export interface ProviderMeta {
+  id: DemoProviderId;
+  name: string;
+  plan: string;
+}
+
+export const PROVIDER_META: Record<DemoProviderId, ProviderMeta> = {
+  claude: { id: "claude", name: "Claude", plan: "Team 5x" },
+  codex: { id: "codex", name: "Codex", plan: "Plus" },
+  cursor: { id: "cursor", name: "Cursor", plan: "Ultra" },
+};
+
+/**
+ * Catalog of every row a provider can show, keyed so the demo timeline can add,
+ * remove, and reorder them. Visual only — mirrors the native app's popover.
+ */
+export const ROWS: Record<DemoProviderId, Record<string, MetricRow>> = {
+  claude: {
+    session: { kind: "meter", label: "Session", percent: 100, headline: "100% left", trailing: "Resets in 5h" },
+    weekly: { kind: "meter", label: "Weekly", percent: 81, headline: "81% left", trailing: "Resets in 1d 16h" },
+    today: { kind: "text", label: "Today", value: "$118.90 · 240.3M tokens", info: true },
+    yesterday: { kind: "text", label: "Yesterday", value: "$218.04 · 438.5M tokens", info: true },
+    last30: { kind: "text", label: "Last 30 Days", value: "$2.5K · 2.3B tokens", info: true },
+    extra: { kind: "text", label: "Extra usage", value: "$24.80 used", info: true },
+  },
+  codex: {
+    session: { kind: "meter", label: "Session", percent: 99, headline: "99% left", trailing: "Resets in 4h 57m" },
+    weekly: { kind: "meter", label: "Weekly", percent: 63, headline: "63% left", trailing: "Resets in 3d 6h" },
+    last30: { kind: "text", label: "Last 30 Days", value: "$18.75 · 25.7M tokens", info: true },
+    extra: { kind: "text", label: "Extra usage", value: "$5.00 used", info: true },
+    ratelimit: { kind: "text", label: "Rate Limit Resets", value: "2 available", info: true },
+  },
+  cursor: {
+    plan: { kind: "meter", label: "Plan usage", percent: 67, headline: "67% left", trailing: "Resets in 8d 9h" },
+    auto: { kind: "text", label: "Auto usage", value: "$10.00 used", info: true },
+    today: { kind: "text", label: "Today", value: "$7.05 · 6.2M tokens", info: true },
+  },
+};
+
+/** Menu-bar strip values per provider (matches the native tray). */
+export const stripGroups: Record<DemoProviderId, StripGroup> = {
+  claude: { id: "claude", values: ["100%", "81%"] },
+  codex: { id: "codex", values: ["99%", "63%"] },
+  cursor: { id: "cursor", values: ["67%", "$10"] },
+};

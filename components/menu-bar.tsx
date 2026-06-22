@@ -1,56 +1,76 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AppleIcon, ControlCenterIcon, WifiIcon } from "@/lib/icons";
-import { trayBarData } from "@/lib/mock-data";
+import { motion } from "motion/react";
+import {
+  AppleIcon,
+  ControlCenterIcon,
+  WifiIcon,
+  ClaudeIcon,
+  CodexIcon,
+  CursorIcon,
+  DevinIcon,
+  GrokIcon,
+} from "@/lib/icons";
+import { useDemoStripGroups, useLayoutReady } from "@/lib/demo-timeline";
+import type { ProviderId } from "@/lib/types";
 
-function TrayIcon({ id = "tray-icon" }: { id?: string }) {
-  const barWidth = 18;
-  const barHeight = 18;
-  const padding = 1.5;
-  const gap = 1;
-  const bars = trayBarData;
-  const trackCount = bars.length;
-  const totalGap = (trackCount - 1) * gap;
-  const trackH = (barHeight - padding * 2 - totalGap) / trackCount;
-  const radius = trackH / 3;
+const STRIP_TRANSITION = {
+  duration: 0.5,
+  ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+};
 
+const STRIP_ICONS: Record<ProviderId, typeof ClaudeIcon> = {
+  claude: ClaudeIcon,
+  codex: CodexIcon,
+  cursor: CursorIcon,
+  devin: DevinIcon,
+  grok: GrokIcon,
+};
+
+/** A provider's pinned values: one large number, or two tight stacked lines (read positionally). */
+function StripValues({ values }: { values: string[] }) {
+  if (values.length <= 1) {
+    return (
+      <span className="font-mono text-[12px] font-bold tabular-nums leading-none">
+        {values[0] ?? ""}
+      </span>
+    );
+  }
   return (
-    <svg
-      id={id}
-      width={barWidth}
-      height={barHeight}
-      viewBox={`0 0 ${barWidth} ${barHeight}`}
-      className="flex-shrink-0"
-    >
-      {bars.map((bar, i) => {
-        const y = padding + i * (trackH + gap);
-        const trackW = barWidth - padding * 2;
-        const fillW = (trackW * bar.percent) / 100;
+    <div className="flex flex-col items-end font-mono leading-[1.08]">
+      {values.map((v, i) => (
+        <span key={i} className="text-[9.5px] font-semibold tabular-nums">
+          {v}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/** The OpenUsage menu-bar strip: a bold provider glyph + values per provider. */
+function MenuBarStrip({ id = "tray-icon" }: { id?: string }) {
+  const groups = useDemoStripGroups();
+  const layoutReady = useLayoutReady();
+  return (
+    <div id={id} className="flex items-center gap-3.5 select-none">
+      {groups.map((group) => {
+        const Icon = STRIP_ICONS[group.id];
         return (
-          <g key={bar.label}>
-            <rect
-              x={padding}
-              y={y}
-              width={trackW}
-              height={trackH}
-              rx={radius}
-              fill="white"
-              opacity={0.22}
-            />
-            <rect
-              x={padding}
-              y={y}
-              width={fillW}
-              height={trackH}
-              rx={radius}
-              fill="white"
-              opacity={1}
-            />
-          </g>
+          <motion.div
+            // Remount when layout animations switch on so motion (re)creates the
+            // projection node with `layout` enabled — see panel.tsx for the why.
+            key={`${group.id}-${layoutReady ? "live" : "init"}`}
+            layout={layoutReady}
+            transition={STRIP_TRANSITION}
+            className="flex items-center gap-1.5"
+          >
+            <Icon className="h-[22px] w-[22px] shrink-0" style={{ color: "var(--bar-fg)" }} />
+            <StripValues values={group.values} />
+          </motion.div>
         );
       })}
-    </svg>
+    </div>
   );
 }
 
@@ -113,7 +133,7 @@ export function MenuBar() {
     <div
       className="w-full h-[28px] flex items-center justify-between px-4 select-none"
       style={{
-        background: "rgba(0, 0, 0, 0.5)",
+        background: "var(--bar-bg)",
         color: "var(--bar-fg)",
         fontFamily: "system-ui, -apple-system, sans-serif",
       }}
@@ -130,7 +150,7 @@ export function MenuBar() {
         <span className="text-[13px] opacity-60">Help</span>
       </div>
 
-      {/* Right: OpenUsage tray first, then system icons, then date/time */}
+      {/* Right: OpenUsage strip first, then system icons, then date/time */}
       <MenuBarTray />
     </div>
   );
@@ -139,7 +159,7 @@ export function MenuBar() {
 export function MenuBarTray({ trayIconId }: { trayIconId?: string } = {}) {
   return (
     <div className="flex items-center gap-[10px]">
-      <TrayIcon id={trayIconId} />
+      <MenuBarStrip id={trayIconId} />
       <WifiIcon className="h-[11px] w-auto opacity-85" />
       <BatteryIcon className="w-[24px] h-[11px] opacity-85" />
       <ControlCenterIcon className="h-[11px] w-auto opacity-85" />

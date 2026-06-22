@@ -4,8 +4,7 @@ import { HeroContent } from "@/components/hero-content";
 import { ProviderGrid } from "@/components/provider-grid";
 import { NoiseOverlay } from "@/components/noise-overlay";
 import { TrackedLink } from "@/components/tracked-link";
-import { Github, Gauge, BarChart3, Zap, Puzzle, Radio } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Github, Gauge, BarChart3, Zap, Cpu, Radio } from "lucide-react";
 import { ApiExample } from "@/components/api-example";
 
 interface Contributor {
@@ -64,7 +63,7 @@ export default async function Home() {
         </div>
 
         {/* Hero: just the marketing content */}
-        <section className="max-w-7xl mx-auto px-6 lg:px-12 lg:pr-[440px]">
+        <section className="max-w-7xl mx-auto px-6 lg:px-12 lg:pr-[380px]">
           <div className="lg:min-h-[600px]">
             <HeroContent />
           </div>
@@ -81,14 +80,14 @@ export default async function Home() {
           <div
             className="w-full h-[28px] flex items-center justify-end px-4 select-none"
             style={{
-              background: "rgba(0, 0, 0, 0.5)",
+              background: "var(--bar-bg)",
               color: "var(--bar-fg)",
               fontFamily: "system-ui, -apple-system, sans-serif",
             }}
           >
             <MenuBarTray trayIconId="tray-icon-mobile" />
           </div>
-          {/* Normal panel with arrow, flow-positioned */}
+          {/* Panel, flow-positioned below the tray bar */}
           <div className="px-3 md:px-12 w-full flex flex-col items-center md:items-end">
             <Panel version={version} trayIconId="tray-icon-mobile" placement="flow" />
           </div>
@@ -103,10 +102,8 @@ export default async function Home() {
         <div
           className="rounded-2xl p-6 md:p-10"
           style={{
-            border: "1px solid var(--page-border)",
-            backgroundColor: "rgba(0, 0, 0, 0.15)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid var(--page-card-border)",
+            backgroundColor: "var(--page-card)",
           }}
         >
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
@@ -116,20 +113,17 @@ export default async function Home() {
                 className="w-12 h-12 mb-3"
                 style={{ color: "var(--page-accent)" }}
               />
-              <h2
-                className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty"
-                style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
-              >
+              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty">
                 One Signal. Every Screen.
               </h2>
               <p
                 className="text-sm lg:text-base leading-relaxed text-pretty"
                 style={{ color: "var(--page-fg-muted)" }}
               >
-                Think of it like a weather station &ndash; OpenUsage does all
-                the measuring. Your status line, your editor, your scripts?
-                They just read the forecast through a local API. No tokens, no
-                auth, no setup.
+                Think of it like a weather station. OpenUsage does all the
+                measuring. Your status line, your editor, your scripts? They
+                just read the forecast through a local API. No tokens, no auth,
+                no setup.
               </p>
               <div
                 className="text-sm font-mono pt-2 space-y-1"
@@ -142,7 +136,7 @@ export default async function Home() {
                     href="http://localhost:6736/v1/usage"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors hover:text-white"
+                    className="transition-colors hover:text-[var(--page-accent)]"
                   >
                     localhost:6736/v1/usage
                   </a>
@@ -154,7 +148,7 @@ export default async function Home() {
                     href="http://localhost:6736/v1/usage/claude"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors hover:text-white"
+                    className="transition-colors hover:text-[var(--page-accent)]"
                   >
                     localhost:6736/v1/usage/claude
                   </a>
@@ -173,10 +167,7 @@ export default async function Home() {
       {/* ── Features Section ── */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
         <div className="mb-12">
-          <h2
-            className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty"
-            style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
-          >
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty">
             Never Wonder Again
           </h2>
           <p
@@ -193,10 +184,8 @@ export default async function Home() {
               key={feature.title}
               className="p-5 rounded-xl transition-colors"
               style={{
-                border: "1px solid var(--page-border)",
-                backgroundColor: "rgba(0, 0, 0, 0.15)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
+                border: "1px solid var(--page-card-border)",
+                backgroundColor: "var(--page-card)",
               }}
             >
               <feature.icon
@@ -217,131 +206,85 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── How It Works ── */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
-        <h2
-          className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty mb-12"
-          style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
-        >
-          Two Minutes to Peace of Mind
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {steps.map((step, i) => (
-            <div key={step.title} className="flex gap-4">
-              <span
-                className="text-2xl font-bold tabular-nums flex-shrink-0"
-                style={{
-                  fontFamily: "var(--font-geist-pixel-circle)",
-                  color: "var(--page-fg-subtle)",
-                }}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <h3 className="text-base font-bold text-pretty mb-1">{step.title}</h3>
-                <p
-                  className="text-sm leading-relaxed text-pretty"
-                  style={{ color: "var(--page-fg-muted)" }}
-                >
-                  {step.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ── Open Source ── */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
         <div
           className="rounded-2xl p-6 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8"
           style={{
-            border: "1px solid var(--page-border)",
-            backgroundColor: "rgba(0, 0, 0, 0.15)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid var(--page-card-border)",
+            backgroundColor: "var(--page-card)",
           }}
         >
-          <div className="space-y-3 max-w-lg">
-            <h2
-            className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty"
-            style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
-          >
-            Read Every Line.
+          {/* Left: copy + CTA */}
+          <div className="space-y-4 max-w-lg">
+            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty">
+              Truly Open Source
             </h2>
             <p
               className="text-sm lg:text-base leading-relaxed text-pretty"
               style={{ color: "var(--page-fg-muted)" }}
             >
-              Proudly open source. Built with Tauri, React, and TypeScript.
-              Jump in, fix a bug, add a provider, every contribution
+              A native macOS app built with Swift and SwiftUI, and fully built
+              with AI. Jump in, fix a bug, or add a provider. Every contribution
               makes it better for everyone.
             </p>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
-              <Badge variant="outline">Tauri 2</Badge>
-              <Badge variant="outline">React 19</Badge>
-              <Badge variant="outline">TypeScript</Badge>
-              <Badge variant="outline">QuickJS</Badge>
-            </div>
-            {contributors.length > 0 && (
-              <div className="flex flex-wrap items-center gap-3 pt-4">
-                <div className="flex -space-x-2">
-                  {contributors.map((c) => (
-                    <a
-                      key={c.login}
-                      href={c.html_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={c.login}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`${c.avatar_url}&s=64`}
-                        alt={c.login}
-                        width={32}
-                        height={32}
-                        className="rounded-full ring-2 ring-[var(--card)] hover:ring-[var(--page-accent)] transition-all"
-                      />
-                    </a>
-                  ))}
-                </div>
-                <span
-                  className="text-xs"
-                  style={{ color: "var(--page-fg-muted)" }}
-                >
-                  {contributors.length} contributor{contributors.length !== 1 && "s"}
-                </span>
-              </div>
-            )}
+            <TrackedLink
+              event="view_on_github_clicked"
+              href="https://github.com/robinebers/openusage"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors hover:brightness-125"
+              style={{
+                border: "1px solid var(--btn-secondary-border)",
+                backgroundColor: "var(--btn-secondary-bg)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                color: "var(--page-fg)",
+              }}
+            >
+              <Github className="w-4 h-4" />
+              View on GitHub
+            </TrackedLink>
           </div>
-          <TrackedLink
-            event="view_on_github_clicked"
-            href="https://github.com/robinebers/openusage"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors hover:brightness-125 flex-shrink-0"
-            style={{
-              border: "1px solid var(--btn-secondary-border)",
-              backgroundColor: "var(--btn-secondary-bg)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              color: "var(--page-fg)",
-            }}
-          >
-            <Github className="w-4 h-4" />
-            View on GitHub
-          </TrackedLink>
+
+          {/* Right: contributors wall */}
+          {contributors.length > 0 && (
+            <div className="w-full md:w-auto md:max-w-sm flex flex-col gap-3 md:items-end">
+              <div className="flex flex-wrap gap-2 md:justify-end">
+                {contributors.map((c) => (
+                  <a
+                    key={c.login}
+                    href={c.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={c.login}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`${c.avatar_url}&s=64`}
+                      alt={c.login}
+                      width={36}
+                      height={36}
+                      className="rounded-full ring-2 ring-[var(--card)] hover:ring-[var(--page-accent)] transition-all"
+                    />
+                  </a>
+                ))}
+              </div>
+              <span
+                className="text-xs"
+                style={{ color: "var(--page-fg-muted)" }}
+              >
+                {contributors.length} contributor{contributors.length !== 1 && "s"}
+              </span>
+            </div>
+          )}
         </div>
       </section>
 
       {/* ── Download CTA ── */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24 text-center">
-        <h2
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-pretty mb-4"
-            style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
-          >
-            Never Get Cut Off by Surprise.
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-pretty mb-4">
+          Never Get Cut Off by Surprise.
         </h2>
         <p
           className="text-sm lg:text-base mb-8 max-w-md mx-auto text-pretty"
@@ -359,7 +302,7 @@ export default async function Home() {
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
             style={{
               backgroundColor: "var(--page-accent)",
-              color: "#000",
+              color: "var(--page-accent-fg)",
             }}
           >
             Download for macOS
@@ -389,7 +332,7 @@ export default async function Home() {
                 href="https://itsbyrob.in/youtube"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-[var(--page-accent)]"
               >
                 Robin Ebers
               </a>
@@ -401,7 +344,7 @@ export default async function Home() {
               href="https://github.com/robinebers/openusage"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs transition-colors hover:text-white"
+              className="text-xs transition-colors hover:text-[var(--page-accent)]"
               style={{ color: "var(--page-fg-subtle)" }}
             >
               GitHub
@@ -411,7 +354,7 @@ export default async function Home() {
               href="https://itsbyrob.in/youtube"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs transition-colors hover:text-white"
+              className="text-xs transition-colors hover:text-[var(--page-accent)]"
               style={{ color: "var(--page-fg-subtle)" }}
             >
               YouTube
@@ -421,7 +364,7 @@ export default async function Home() {
               href="https://itsbyrob.in/x"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs transition-colors hover:text-white"
+              className="text-xs transition-colors hover:text-[var(--page-accent)]"
               style={{ color: "var(--page-fg-subtle)" }}
             >
               Twitter
@@ -431,7 +374,7 @@ export default async function Home() {
               href="https://itsbyrob.in/lab"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs transition-colors hover:text-white"
+              className="text-xs transition-colors hover:text-[var(--page-accent)]"
               style={{ color: "var(--page-fg-subtle)" }}
             >
               Newsletter
@@ -465,28 +408,9 @@ const features = [
       "See if you're using too much too fast. Stay ahead of your limits before it's too late.",
   },
   {
-    icon: Puzzle,
-    title: "Plugin-Based",
+    icon: Cpu,
+    title: "Native macOS App",
     description:
-      "Every provider is a plugin and open source, when things breaks, they get fixed fast.",
+      "A fast, lightweight Swift app that sips resources and feels right at home in your menu bar.",
   },
 ];
-
-const steps = [
-  {
-    title: "Download",
-    description:
-      "One download from GitHub, zero terminals or setup fuss",
-  },
-  {
-    title: "Sign In",
-    description:
-      "OpenUsage automatically finds your accounts like Cursor and Claude Code",
-  },
-  {
-    title: "Automated Updates",
-    description:
-      "Your usage stats refresh in the background, and so does the app",
-  },
-];
-

@@ -5,9 +5,6 @@ import { plugins } from "@/lib/plugins";
 import { Github } from "lucide-react";
 import { track } from "@vercel/analytics";
 
-const featured = plugins.filter((p) => p.featured);
-const moreCount = plugins.length - featured.length;
-
 export function HeroContent() {
   return (
     <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl">
@@ -24,11 +21,8 @@ export function HeroContent() {
 
       {/* Headline */}
       <div className="space-y-4 text-pretty">
-        <h1
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-pretty"
-          style={{ fontFamily: "var(--font-geist-pixel-circle)" }}
-        >
-          All Your <span style={{ color: "var(--page-accent)" }}>AI Coding Limits</span> In One Place
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-pretty">
+          The Only AI Usage Tracker That&apos;s <span style={{ color: "var(--page-accent)" }}>Truly Yours</span>
         </h1>
       </div>
 
@@ -37,12 +31,12 @@ export function HeroContent() {
         className="text-sm sm:text-base lg:text-lg leading-relaxed text-pretty"
         style={{ color: "var(--page-fg-muted)" }}
       >
-        Burning through your subscriptions too fast? Paying for stuff you never use? Stop guessing. OpenUsage is free and open source.
+        Track and customize the exact metrics and subscriptions that matter to you. Keep them at a glance in the menu bar. Just open the app, make it yours, and never look back.
       </p>
 
       {/* Provider icons */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-5">
-        {featured.map(({ id, name, Icon }) => (
+        {plugins.map(({ id, name, Icon }) => (
           <div key={id} className="flex items-center gap-2">
             <Icon className="w-6 h-6" style={{ color: "var(--page-fg-muted)" }} />
             <span
@@ -53,14 +47,6 @@ export function HeroContent() {
             </span>
           </div>
         ))}
-        {moreCount > 0 && (
-          <span
-            className="text-sm"
-            style={{ color: "var(--page-fg-muted)" }}
-          >
-            + {moreCount} more
-          </span>
-        )}
       </div>
 
       {/* CTAs */}
@@ -72,7 +58,7 @@ export function HeroContent() {
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
           style={{
             backgroundColor: "var(--page-accent)",
-            color: "#000",
+            color: "var(--page-accent-fg)",
           }}
           onClick={() => track("hero_download_clicked")}
         >
@@ -82,10 +68,9 @@ export function HeroContent() {
           href="https://github.com/robinebers/openusage"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors hover:brightness-125"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-[var(--btn-secondary-bg)] hover:bg-black/5"
           style={{
             border: "1px solid var(--btn-secondary-border)",
-            backgroundColor: "var(--btn-secondary-bg)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             color: "var(--page-fg)",
@@ -103,7 +88,7 @@ export function HeroContent() {
           className="text-xs font-mono px-2 py-1 rounded"
           style={{
             color: "var(--page-fg-muted)",
-            backgroundColor: "rgba(255,255,255,0.08)",
+            backgroundColor: "rgba(0,0,0,0.05)",
           }}
         >
           Free &middot; Open Source &middot; macOS

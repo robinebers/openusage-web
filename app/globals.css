@@ -36,8 +36,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --font-sans: var(--font-geist-sans), sans-serif;
-  --font-display: var(--font-geist-pixel-circle), monospace;
-  --font-mono: var(--font-geist-pixel-circle), monospace;
+  --font-display: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 /* ── Panel theme (light — same as openusage app :root) ── */
@@ -71,51 +71,56 @@
   --sidebar-ring: oklch(0.707 0.022 261.325);
 }
 
-/* ── Page-level tokens (Ember — orange accent, neutral dark) ── */
+/* ── Page-level tokens (light — brand blue accent on white) ── */
 :root {
   --radius: 0.625rem;
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card: #111111;
-  --card-foreground: #ededed;
-  --popover: #0a0a0a;
-  --popover-foreground: #ededed;
-  --primary: #ededed;
-  --primary-foreground: #0a0a0a;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ededed;
-  --muted: #1a1a1a;
-  --muted-foreground: #888888;
-  --accent: #1a1a1a;
-  --accent-foreground: #ededed;
+  --background: #ffffff;
+  --foreground: #0a0a0c;
+  --card: #ffffff;
+  --card-foreground: #0a0a0c;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0c;
+  --primary: #18181b;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f5f7;
+  --secondary-foreground: #18181b;
+  --muted: #f4f5f7;
+  --muted-foreground: #5b6068;
+  --accent: #f4f5f7;
+  --accent-foreground: #18181b;
   --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #555555;
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: #ededed;
-  --sidebar-primary: #ededed;
-  --sidebar-primary-foreground: #0a0a0a;
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: #ededed;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #555555;
+  --border: #e6e8ec;
+  --input: #e6e8ec;
+  --ring: #2b7fff;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0a0a0c;
+  --sidebar-primary: #18181b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f4f5f7;
+  --sidebar-accent-foreground: #18181b;
+  --sidebar-border: #e6e8ec;
+  --sidebar-ring: #2b7fff;
 
   /* Page-specific extras */
-  --page-bg: #000000;
-  --page-fg: #ededed;
-  --page-fg-muted: #888888;
-  --page-fg-subtle: #444444;
-  --page-accent: #BFFF00;
-  --page-border: #222222;
+  --page-bg: #ffffff;
+  --page-fg: #0a0a0c;
+  --page-fg-muted: #5b6068;
+  --page-fg-subtle: #8b9098;
+  --page-accent: #2b7fff;
+  --page-accent-fg: #ffffff;
+  --page-border: #e6e8ec;
+
+  /* Light surface for cards/sections */
+  --page-card: #f7f8fa;
+  --page-card-border: #e9ebef;
 
   /* Secondary button */
-  --btn-secondary-bg: rgba(255, 255, 255, 0.08);
-  --btn-secondary-border: rgba(255, 255, 255, 0.15);
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-border: #d9dce1;
 
-  /* macOS menu bar */
-  --bar-bg: rgba(30, 30, 30, 0.55);
-  --bar-fg: rgba(255, 255, 255, 0.9);
+  /* macOS menu bar (stays dark — it represents the OS chrome) */
+  --bar-bg: rgba(22, 24, 28, 0.92);
+  --bar-fg: rgba(255, 255, 255, 0.92);
 
   /* Provider brand colors */
   --brand-cursor: #000000;
@@ -136,10 +141,10 @@
   --brand-zai: #2d2d2d;
   --brand-opencode-go: #000000;
 
-  /* Pace indicators */
-  --pace-green: #22c55e;
-  --pace-yellow: #eab308;
-  --pace-red: #ef4444;
+  /* Meter severity (matches the native app: blue healthy, amber/red as it runs out) */
+  --meter-normal: #2b7fff;
+  --meter-warning: #eab308;
+  --meter-critical: #ef4444;
 }
 
 body {
@@ -147,28 +152,6 @@ body {
   color: var(--page-fg);
   font-family: var(--font-geist-sans), sans-serif;
   overflow-x: hidden;
-}
-
-/* ── Arrow from the real app ── */
-.tray-arrow {
-  width: 0;
-  height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid var(--panel-border, oklch(0.928 0.006 264.531));
-  position: relative;
-  flex-shrink: 0;
-}
-.tray-arrow::after {
-  content: "";
-  position: absolute;
-  left: -6px;
-  top: 1.5px;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid oklch(1 0 0);
 }
 
 /* ── Panel fade-in ── */
@@ -185,41 +168,7 @@ body {
 
 /* ── Selection ── */
 ::selection {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
+  background: color-mix(in oklab, var(--page-accent) 18%, transparent);
+  color: var(--page-fg);
 }
 
-/* ── Marquee (seamless loop: duplicated content in markup) ── */
-@keyframes marquee-shift {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  backface-visibility: hidden;
-  animation: marquee-shift var(--marquee-duration, 48s) linear infinite;
-}
-
-
-.marquee-track--slow { --marquee-duration: 64s; }
-
-.marquee-row-2 .marquee-track {
-  animation-duration: 56s;
-  animation-direction: reverse;
-  padding-left: 3rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-}
-
-/* Alpha mask fade — no color interpolation, just transparency */
-.marquee-fade {
-  position: relative;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-}

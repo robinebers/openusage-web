@@ -1,29 +1,44 @@
-export type PaceStatus = "ahead" | "on-track" | "behind";
+export type MetricSeverity = "normal" | "warning" | "critical";
 
-export type ProviderId = "codex" | "claude" | "cursor" | "grok" | "devin";
+export type ProviderId = "claude" | "codex" | "cursor" | "devin" | "grok";
 
-export interface MetricLine {
+/** A bounded metric: capsule meter + headline/reset reading (matches the app's bar rows). */
+export interface MeterRow {
+  kind: "meter";
   label: string;
   /** 0–100, percentage filled */
   percent: number;
-  /** e.g. "73% left" */
-  primaryValue: string;
-  /** e.g. "Resets in 2h 18m" or "100% cap" */
-  secondaryValue: string;
-  pace: PaceStatus;
-  /** Optional custom bar color */
-  barColor?: string;
+  /** e.g. "100% left" */
+  headline: string;
+  /** e.g. "Resets in 5h" */
+  trailing: string;
+  /** Bar color; defaults to "normal" (blue). */
+  severity?: MetricSeverity;
+  /** Optional flame warning shown on the label line (running out). */
+  warning?: string;
 }
+
+/** An unbounded metric: no bar, label on the left and a value on the right. */
+export interface TextRow {
+  kind: "text";
+  label: string;
+  /** e.g. "$218.04 · 438.5M tokens" */
+  value: string;
+  /** Show the small ⓘ affordance next to the label. */
+  info?: boolean;
+}
+
+export type MetricRow = MeterRow | TextRow;
 
 export interface Provider {
   id: ProviderId;
   name: string;
-  planBadge: string;
-  brandColor: string;
-  /** Metrics shown on the overview (summary) */
-  overviewMetrics: MetricLine[];
-  /** All metrics shown on the detail view */
-  detailMetrics: MetricLine[];
+  plan: string;
+  rows: MetricRow[];
 }
 
-export type ActiveView = "overview" | ProviderId;
+/** One menu-bar segment: a provider glyph plus its 1–2 stacked tray values. */
+export interface StripGroup {
+  id: ProviderId;
+  values: string[];
+}

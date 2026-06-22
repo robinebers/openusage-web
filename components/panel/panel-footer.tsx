@@ -1,16 +1,28 @@
+import { MoreHorizontal } from "lucide-react";
+
 interface PanelFooterProps {
   version: string | null;
 }
 
 export function PanelFooter({ version }: PanelFooterProps) {
   return (
-    <div className="flex justify-between items-center h-8 pt-1.5 border-t">
-      <span className="text-xs text-muted-foreground">
-        OpenUsage{version ? ` ${version}` : ""}
-      </span>
-      <span className="text-xs text-muted-foreground tabular-nums">
-        Next update in 3m
-      </span>
+    <div className="-mx-3.5 mt-2 flex items-center justify-between px-3.5 py-2.5">
+      <div className="flex flex-col leading-tight">
+        <span className="text-[11px] text-muted-foreground">
+          OpenUsage {version ?? "0.7.0-beta.11"}
+        </span>
+        <span className="text-[11px] tabular-nums text-muted-foreground/80">
+          Next update in 2m
+        </span>
+      </div>
+      {/* Visual-only round button (non-interactive) — mirrors the app's overflow menu. */}
+      <div
+        aria-hidden
+        className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground"
+        style={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+      >
+        <MoreHorizontal className="h-4 w-4" />
+      </div>
     </div>
   );
 }

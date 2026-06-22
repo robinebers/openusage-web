@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-import { GeistPixelCircle } from "geist/font/pixel";
+import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const title =
   "OpenUsage - AI Limits Tracker for Cursor, Claude Code, Codex and more";
 const description =
-  "Never hit your AI limits by surprise. Know exactly where you stand without ever leaving your AI coding tool. Track Cursor, Claude Code, Codex, Copilot and more. Free and open source.";
+  "Never hit your AI limits by surprise. See every AI coding subscription in your menu bar. Track Claude Code, Codex, Cursor, Devin and Grok. Free and open source for macOS.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://openusage.dev"),
   title,
   description,
   openGraph: {
@@ -33,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${GeistSans.variable} ${GeistPixelCircle.variable} antialiased`}
+        className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         {children}
         <Analytics />

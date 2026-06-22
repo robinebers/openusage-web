@@ -70,8 +70,8 @@ export function ApiExample() {
     <div
       className="rounded-xl overflow-hidden font-mono text-xs"
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.55)",
-        border: "1px solid var(--page-border)",
+        backgroundColor: "#0d0f13",
+        border: "1px solid rgba(255,255,255,0.07)",
       }}
     >
       {/* Response */}
