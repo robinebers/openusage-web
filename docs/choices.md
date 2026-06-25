@@ -2,6 +2,16 @@
 
 ## 2026-06-25
 
+### Hero CTAs split into beta + stable; sticky "OpenUsage is changing" banner
+
+- Hero primary "Download for macOS" now points to the latest **pre-release** (beta channel); secondary button replaces "Contribute" with "Download {stableVersion} (stable)" → `releases/latest`.
+- Beta link is resolved dynamically, not hardcoded: `getBetaRelease()` in `app/page.tsx` hits the GitHub releases API (`?per_page=15`, `revalidate: 86400`) and picks the first `prerelease && !draft`. Reason: betas ship every ~1-2 days, so a hardcoded `v0.7.0-beta.14` would go stale. Fallback when the fetch fails: `betaUrl` → `/releases` page, version label hidden.
+- Stable version label comes from existing `getVersion()` (latest.json → 0.6.27); falls back to literal "0.6.27" if null.
+- Hero badge changed from "Free · Open Source · macOS" to "Beta {betaVersion} · Free · Open Source" so the primary button's beta nature is transparent (the explicit "(stable)" secondary already implies primary = newer).
+- Announcement: chose a **slim sticky top bar** (`components/announcement-banner.tsx`) over a full section — a section is easy to scroll past; a sticky bar is a persistent, lightweight reminder. Blue (`--page-accent`), dismissible (X). Dismiss is **session-only state** (no localStorage) to stay lint-clean (no setState-in-effect) and avoid SSR/hydration mismatch + flash; reappears on reload, which suits an "important, keep-seeing-it" message.
+- `globals.css`: `body { overflow-x: hidden }` → `overflow-x: clip`. `hidden` turns body into a scroll container and breaks `position: sticky`; `clip` prevents horizontal overflow without that side effect. Root-cause fix for the sticky bar.
+- Scope kept to hero + banner per request; bottom Download CTA + footer left pointing at stable.
+
 ### Maintainers section
 
 - New `components/maintainers.tsx` + section wired into `app/page.tsx` between the "Truly Open Source" contributors block and the Download CTA.

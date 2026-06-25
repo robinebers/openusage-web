@@ -2,10 +2,23 @@
 
 import { GaugeIcon } from "@/lib/icons";
 import { plugins } from "@/lib/plugins";
-import { Github } from "lucide-react";
+import { Download } from "lucide-react";
 import { track } from "@vercel/analytics";
 
-export function HeroContent() {
+interface HeroContentProps {
+  betaUrl: string;
+  betaVersion: string | null;
+  stableUrl: string;
+  stableVersion: string | null;
+}
+
+export function HeroContent({
+  betaUrl,
+  betaVersion,
+  stableUrl,
+  stableVersion,
+}: HeroContentProps) {
+  const stableLabel = stableVersion ?? "0.6.27";
   return (
     <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl 2xl:max-w-none">
       {/* Logo */}
@@ -52,7 +65,7 @@ export function HeroContent() {
       {/* CTAs */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
         <a
-          href="https://github.com/robinebers/openusage/releases/latest"
+          href={betaUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
@@ -62,10 +75,11 @@ export function HeroContent() {
           }}
           onClick={() => track("hero_download_clicked")}
         >
+          <Download className="w-4 h-4" />
           Download for macOS
         </a>
         <a
-          href="https://github.com/robinebers/openusage"
+          href={stableUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-[var(--btn-secondary-bg)] hover:bg-black/5"
@@ -75,14 +89,13 @@ export function HeroContent() {
             WebkitBackdropFilter: "blur(20px)",
             color: "var(--page-fg)",
           }}
-          onClick={() => track("hero_contribute_clicked")}
+          onClick={() => track("hero_stable_download_clicked")}
         >
-          <Github className="w-4 h-4" />
-          Contribute
+          Download {stableLabel} (stable)
         </a>
       </div>
 
-      {/* MIT badge */}
+      {/* Channel badge */}
       <div>
         <span
           className="text-xs font-mono px-2 py-1 rounded"
@@ -91,7 +104,7 @@ export function HeroContent() {
             backgroundColor: "rgba(0,0,0,0.05)",
           }}
         >
-          Free &middot; Open Source &middot; macOS
+          {betaVersion ? `Beta ${betaVersion}` : "Beta channel"} &middot; Free &middot; Open Source
         </span>
       </div>
     </div>

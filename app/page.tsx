@@ -4,15 +4,48 @@ import { HeroContent } from "@/components/hero-content";
 import { ProviderGrid } from "@/components/provider-grid";
 import { NoiseOverlay } from "@/components/noise-overlay";
 import { TrackedLink } from "@/components/tracked-link";
+import { AnnouncementBanner } from "@/components/announcement-banner";
 import { Github, Gauge, BarChart3, Zap, Cpu, Radio } from "lucide-react";
 import { ApiExample } from "@/components/api-example";
 import { Maintainers } from "@/components/maintainers";
+
+const RELEASES_URL = "https://github.com/robinebers/openusage/releases";
+const STABLE_URL =
+  "https://github.com/robinebers/openusage/releases/latest";
 
 interface Contributor {
   login: string;
   avatar_url: string;
   html_url: string;
   contributions: number;
+}
+
+interface BetaRelease {
+  version: string;
+  url: string;
+}
+
+/** Latest pre-release (beta channel). Betas ship often, so we resolve this at
+ *  build/request time instead of hardcoding a tag that goes stale. */
+async function getBetaRelease(): Promise<BetaRelease | null> {
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/robinebers/openusage/releases?per_page=15",
+      { next: { revalidate: 86400 } }
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as Array<{
+      tag_name: string;
+      html_url: string;
+      prerelease: boolean;
+      draft: boolean;
+    }>;
+    const beta = data.find((r) => r.prerelease && !r.draft);
+    if (!beta) return null;
+    return { version: beta.tag_name.replace(/^v/, ""), url: beta.html_url };
+  } catch {
+    return null;
+  }
 }
 
 async function getVersion(): Promise<string | null> {
@@ -47,13 +80,17 @@ async function getContributors(): Promise<Contributor[]> {
 }
 
 export default async function Home() {
-  const [version, contributors] = await Promise.all([
+  const [version, contributors, beta] = await Promise.all([
     getVersion(),
     getContributors(),
+    getBetaRelease(),
   ]);
+
+  const betaUrl = beta?.url ?? RELEASES_URL;
 
   return (
     <div className="relative min-h-screen" style={{ background: "var(--page-bg)" }}>
+      <AnnouncementBanner betaUrl={betaUrl} betaVersion={beta?.version ?? null} />
       <NoiseOverlay />
 
       {/* ── Menu bar + hero wrapper (positioning context for panel) ── */}
@@ -68,7 +105,12 @@ export default async function Home() {
         {/* Hero: just the marketing content */}
         <section className="max-w-7xl mx-auto px-6 lg:px-12 lg:pr-[380px] 2xl:pr-[340px]">
           <div className="lg:min-h-[600px]">
-            <HeroContent />
+            <HeroContent
+              betaUrl={betaUrl}
+              betaVersion={beta?.version ?? null}
+              stableUrl={STABLE_URL}
+              stableVersion={version}
+            />
           </div>
         </section>
 

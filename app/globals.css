@@ -151,7 +151,9 @@ body {
   background: var(--page-bg);
   color: var(--page-fg);
   font-family: var(--font-geist-sans), sans-serif;
-  overflow-x: hidden;
+  /* `clip` (not `hidden`) prevents horizontal overflow without turning <body>
+     into a scroll container, which would break the sticky announcement bar. */
+  overflow-x: clip;
 }
 
 /* ── Hero highlight ── */
