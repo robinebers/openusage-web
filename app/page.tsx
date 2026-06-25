@@ -6,6 +6,7 @@ import { NoiseOverlay } from "@/components/noise-overlay";
 import { TrackedLink } from "@/components/tracked-link";
 import { Github, Gauge, BarChart3, Zap, Cpu, Radio } from "lucide-react";
 import { ApiExample } from "@/components/api-example";
+import { Maintainers } from "@/components/maintainers";
 
 interface Contributor {
   login: string;
@@ -94,6 +95,51 @@ export default async function Home() {
       {/* ── Provider Grid ── */}
       <ProviderGrid />
 
+      {/* ── Maintainers ── */}
+      <Maintainers />
+
+      {/* ── Features Section ── */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
+        <div className="mb-12">
+          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty">
+            Never Wonder Again
+          </h2>
+          <p
+            className="mt-3 text-sm lg:text-base max-w-lg text-balance"
+            style={{ color: "var(--page-fg-muted)" }}
+          >
+            Everything you need to build without token anxiety.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature) => (
+            <div
+              key={feature.title}
+              className="p-5 rounded-xl transition-colors"
+              style={{
+                border: "1px solid var(--page-card-border)",
+                backgroundColor: "var(--page-card)",
+              }}
+            >
+              <feature.icon
+                className="w-5 h-5 mb-3"
+                style={{ color: "var(--page-accent)" }}
+              />
+              <h3 className="text-base font-bold text-pretty mb-1.5">
+                {feature.title}
+              </h3>
+              <p
+                className="text-sm leading-relaxed text-pretty"
+                style={{ color: "var(--page-fg-muted)" }}
+              >
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Local HTTP API ── */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-8 lg:py-12">
         <div
@@ -158,48 +204,6 @@ export default async function Home() {
               <ApiExample />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Features Section ── */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
-        <div className="mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty">
-            Never Wonder Again
-          </h2>
-          <p
-            className="mt-3 text-sm lg:text-base max-w-lg text-balance"
-            style={{ color: "var(--page-fg-muted)" }}
-          >
-            Everything you need to build without token anxiety.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="p-5 rounded-xl transition-colors"
-              style={{
-                border: "1px solid var(--page-card-border)",
-                backgroundColor: "var(--page-card)",
-              }}
-            >
-              <feature.icon
-                className="w-5 h-5 mb-3"
-                style={{ color: "var(--page-accent)" }}
-              />
-              <h3 className="text-base font-bold text-pretty mb-1.5">
-                {feature.title}
-              </h3>
-              <p
-                className="text-sm leading-relaxed text-pretty"
-                style={{ color: "var(--page-fg-muted)" }}
-              >
-                {feature.description}
-              </p>
-            </div>
-          ))}
         </div>
       </section>
 

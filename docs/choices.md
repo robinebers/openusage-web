@@ -1,5 +1,18 @@
 # Choices
 
+## 2026-06-25
+
+### Maintainers section
+
+- New `components/maintainers.tsx` + section wired into `app/page.tsx` between the "Truly Open Source" contributors block and the Download CTA.
+- Three maintainers (avatars from `~/Downloads`, converted to WebP at 256×256 q82 via `cwebp`, stored in `public/maintainers/`): `robinebers.webp`, `validatedev.webp`, `waosdx.webp`.
+- Icon links use Hugeicons (`@hugeicons/react` + `@hugeicons-pro/core-solid-rounded`). Added the `@hugeicons-pro` registry + `HUGEICONS_TOKEN` auth to `.npmrc` (token shared via Vercel env, mirrors `../robinebershq`). Icons: `GithubIcon`, `NewTwitterIcon` (X), `GlobalIcon` (website).
+- Bios ~same length as Robin's paragraph; links icon-only:
+  - Robin → user bio; github → x.com/robinebers → robinebers.com (no architectprogram.ai).
+  - Mert → bio tied to public GitHub/site: ML job title + macOS menu bar/Homebrew OSS (e.g. BrewServicesManager, Clamper, tap); not generic “production ML pipeline” copy.
+  - David → bio tied to public GitHub: software engineer + OSS side projects (dotfiles, lexer4js, games, property-access-bench); not inferred “native apps/systems” unless repos show it.
+- Icon-only links carry `aria-label` for a11y. Component is `"use client"` (HugeiconsIcon).
+
 ## 2026-06-22
 
 ### Light theme + reorder animation (native-app redesign revision)
