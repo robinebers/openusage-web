@@ -76,7 +76,7 @@ export function HeroContent({
           onClick={() => track("hero_download_clicked")}
         >
           <Download className="w-4 h-4" />
-          Download for macOS
+          Download Latest Beta
         </a>
         <a
           href={stableUrl}

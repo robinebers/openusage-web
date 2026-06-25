@@ -25,13 +25,13 @@ interface BetaRelease {
   url: string;
 }
 
-/** Latest pre-release (beta channel). Betas ship often, so we resolve this at
- *  build/request time instead of hardcoding a tag that goes stale. */
+/** Latest pre-release (beta channel). Betas ship ~daily, so we resolve this at
+ *  request time (1h cache) instead of hardcoding a tag that goes stale. */
 async function getBetaRelease(): Promise<BetaRelease | null> {
   try {
     const res = await fetch(
       "https://api.github.com/repos/robinebers/openusage/releases?per_page=15",
-      { next: { revalidate: 86400 } }
+      { next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
     const data = (await res.json()) as Array<{
