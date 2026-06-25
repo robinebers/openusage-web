@@ -2,13 +2,7 @@
 
 import { track } from "@vercel/analytics";
 
-export function AnnouncementBanner({
-  betaUrl,
-  betaVersion,
-}: {
-  betaUrl: string;
-  betaVersion: string | null;
-}) {
+export function AnnouncementBanner({ betaUrl }: { betaUrl: string }) {
   return (
     <div
       className="sticky top-0 z-[60] w-full"
@@ -16,10 +10,7 @@ export function AnnouncementBanner({
     >
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-2 gap-y-0.5 px-6 py-2 text-center text-xs sm:text-sm">
         <span className="font-semibold">OpenUsage is changing.</span>
-        <span className="opacity-90">
-          A brand-new version is on the way
-          {betaVersion ? ` — preview the ${betaVersion} beta` : ""}.
-        </span>
+        <span className="opacity-90">A brand new version is on the way.</span>
         <a
           href={betaUrl}
           target="_blank"

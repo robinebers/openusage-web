@@ -90,7 +90,7 @@ export default async function Home() {
 
   return (
     <div className="relative min-h-screen" style={{ background: "var(--page-bg)" }}>
-      <AnnouncementBanner betaUrl={betaUrl} betaVersion={beta?.version ?? null} />
+      <AnnouncementBanner betaUrl={betaUrl} />
       <NoiseOverlay />
 
       {/* ── Menu bar + hero wrapper (positioning context for panel) ── */}
