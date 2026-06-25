@@ -4,7 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const siteUrl = "https://openusage.dev";
+const siteUrl = "https://www.openusage.ai";
 const title =
   "OpenUsage - AI Limits Tracker for Cursor, Claude Code, Codex and more";
 const description =

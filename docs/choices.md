@@ -2,6 +2,11 @@
 
 ## 2026-06-25
 
+### Production domain is www.openusage.ai (NOT openusage.dev)
+
+- `metadataBase`/`siteUrl` was hardcoded to `https://openusage.dev`, which 301s → `openusage.org` → 404. That made every OG/Twitter image + canonical point at a dead host, so social previews broke.
+- Live site is on Vercel at apex `openusage.ai`, which 307-redirects to `https://www.openusage.ai/` (www is canonical). Fixed `siteUrl` in `app/layout.tsx` to `https://www.openusage.ai`. Verified prod build emits `og:image`/`twitter:image` = `https://www.openusage.ai/opengraph-image.png`.
+
 ### Hero CTAs split into beta + stable; sticky "OpenUsage is changing" banner
 
 - Hero primary "Download for macOS" now points to the latest **pre-release** (beta channel); secondary button replaces "Contribute" with "Download {stableVersion} (stable)" → `releases/latest`.
