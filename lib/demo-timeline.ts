@@ -30,7 +30,7 @@ const FRAMES: Frame[] = [
     rows: {
       claude: ["session", "weekly", "today", "yesterday", "last30"],
       codex: ["session", "weekly", "last30"],
-      cursor: ["plan", "auto", "today"],
+      cursor: ["usage", "auto", "api", "extra", "trend"],
     },
   },
   {
@@ -38,7 +38,7 @@ const FRAMES: Frame[] = [
     rows: {
       claude: ["session", "weekly", "today", "yesterday", "last30"],
       codex: ["session", "weekly", "last30"],
-      cursor: ["plan", "auto", "today"],
+      cursor: ["usage", "auto", "api", "extra", "trend"],
     },
   },
   {
@@ -46,7 +46,7 @@ const FRAMES: Frame[] = [
     rows: {
       claude: ["weekly", "session", "today", "yesterday", "last30"],
       codex: ["session", "weekly", "last30"],
-      cursor: ["plan", "auto", "today"],
+      cursor: ["usage", "auto", "api", "extra", "trend"],
     },
   },
   {
@@ -54,7 +54,7 @@ const FRAMES: Frame[] = [
     rows: {
       claude: ["weekly", "session", "today", "yesterday", "last30"],
       codex: ["weekly", "session", "last30"],
-      cursor: ["plan", "auto", "today"],
+      cursor: ["usage", "auto", "api", "extra", "trend"],
     },
   },
   {
@@ -62,7 +62,7 @@ const FRAMES: Frame[] = [
     rows: {
       claude: ["weekly", "session", "extra"],
       codex: ["weekly", "session", "last30"],
-      cursor: ["plan", "auto", "today"],
+      cursor: ["usage", "auto", "api", "extra", "trend"],
     },
   },
   {
@@ -70,7 +70,7 @@ const FRAMES: Frame[] = [
     rows: {
       claude: ["weekly", "session", "extra"],
       codex: ["weekly", "session", "extra", "ratelimit"],
-      cursor: ["plan", "auto", "today"],
+      cursor: ["usage", "auto", "api", "extra", "trend"],
     },
   },
 ];
@@ -146,6 +146,9 @@ export function useDemoStripGroups(): StripGroup[] {
     values: frame.rows[id]
       .map((key) => ROWS[id][key])
       .filter((row): row is MeterRow => row?.kind === "meter")
+      // Tray stays to the two lead meters per provider so the 28px bar never
+      // overflows (Cursor now carries a third "API Usage" meter in the popover).
+      .slice(0, 2)
       .map((row) => `${row.percent}%`),
   }));
 }

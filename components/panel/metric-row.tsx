@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { Info, Flame } from "lucide-react";
-import type { MetricRow as MetricRowType, MeterRow, TextRow, MetricSeverity } from "@/lib/types";
+import type { MetricRow as MetricRowType, MeterRow, TextRow, TrendRow, MetricSeverity } from "@/lib/types";
 
 const meterColor: Record<MetricSeverity, string> = {
   normal: "var(--meter-normal)",
@@ -9,7 +9,9 @@ const meterColor: Record<MetricSeverity, string> = {
 };
 
 export function MetricRow({ row }: { row: MetricRowType }) {
-  return row.kind === "meter" ? <MeterRowView row={row} /> : <TextRowView row={row} />;
+  if (row.kind === "meter") return <MeterRowView row={row} />;
+  if (row.kind === "trend") return <TrendRowView row={row} />;
+  return <TextRowView row={row} />;
 }
 
 /** Bounded metric: label (+ optional flame) → capsule meter → headline / reset reading. */
@@ -22,10 +24,9 @@ function MeterRowView({ row }: { row: MeterRow }) {
       <div className="mb-1.5 flex items-center justify-between gap-2">
         <span className="text-[13px] font-semibold text-foreground">{row.label}</span>
         {row.warning && (
-          <span
-            className="flex items-center gap-1 text-[12px] text-muted-foreground"
-            style={{ color: severity === "critical" ? meterColor.critical : undefined }}
-          >
+          // Only the flame carries the severity color; the copy stays muted —
+          // matching the native app (tint on glass is reserved for the symbol).
+          <span className="flex items-center gap-1 text-[12px] text-muted-foreground">
             <Flame className="h-3 w-3" style={{ color: meterColor[severity] }} />
             {row.warning}
           </span>
@@ -43,6 +44,37 @@ function MeterRowView({ row }: { row: MeterRow }) {
       <div className="mt-1.5 flex items-center justify-between">
         <span className="text-[12px] tabular-nums text-foreground">{row.headline}</span>
         <span className="text-[12px] text-muted-foreground">{row.trailing}</span>
+      </div>
+    </div>
+  );
+}
+
+/** Usage Trend: label on the left, a right-aligned day-by-day bar sparkline.
+ *  Bars are proportional to the window's peak (a true zero shows a thin stub),
+ *  in meter-blue so the trend reads as part of the card's visual language. */
+const TREND_HEIGHT = 22;
+
+function TrendRowView({ row }: { row: TrendRow }) {
+  const peak = Math.max(1, ...row.points);
+  return (
+    <div className="flex items-center justify-between gap-2 px-3.5 py-[5px]">
+      <span className="text-[12px] font-semibold text-foreground">{row.label}</span>
+      <div
+        className="flex items-end gap-px"
+        style={{ height: TREND_HEIGHT, width: 150 }}
+      >
+        {row.points.map((value, i) => {
+          const ratio = peak > 0 ? Math.min(1, value / peak) : 0;
+          const height =
+            value <= 0 ? 2 : Math.max(TREND_HEIGHT * 0.18, TREND_HEIGHT * ratio);
+          return (
+            <div
+              key={i}
+              className="flex-1 rounded-[1px]"
+              style={{ height, minWidth: 2, backgroundColor: meterColor.normal }}
+            />
+          );
+        })}
       </div>
     </div>
   );

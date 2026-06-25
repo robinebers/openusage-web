@@ -36,8 +36,14 @@ export const ROWS: Record<DemoProviderId, Record<string, MetricRow>> = {
     ratelimit: { kind: "text", label: "Rate Limit Resets", value: "2 available", info: true },
   },
   cursor: {
-    plan: { kind: "meter", label: "Plan usage", percent: 67, headline: "67% left", trailing: "Resets in 8d 9h" },
-    auto: { kind: "meter", label: "Auto usage", percent: 45, headline: "45% left", trailing: "Resets in 8d 9h" },
-    today: { kind: "text", label: "Today", value: "$7.05 · 6.2M tokens", info: true },
+    usage: { kind: "meter", label: "Total Usage", percent: 73, headline: "73% left", trailing: "Resets in 18d 23h" },
+    auto: { kind: "meter", label: "Auto Usage", percent: 98, headline: "98% left", trailing: "Resets in 18d 23h" },
+    api: { kind: "meter", label: "API Usage", percent: 0, headline: "0% left", trailing: "Resets in 18d 23h", severity: "critical", warning: "Limit reached" },
+    extra: { kind: "text", label: "Extra Usage", value: "$364.04 spent" },
+    trend: {
+      kind: "trend",
+      label: "Usage Trend",
+      points: [3, 4, 3, 5, 4, 6, 5, 4, 6, 7, 5, 8, 6, 7, 6, 9, 7, 8, 16, 6, 5],
+    },
   },
 };

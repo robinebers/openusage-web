@@ -28,7 +28,16 @@ export interface TextRow {
   info?: boolean;
 }
 
-export type MetricRow = MeterRow | TextRow;
+/** A day-by-day usage sparkline (the app's "Usage Trend" row). Bars draw
+ *  proportional to the window's peak — visual only, never computed here. */
+export interface TrendRow {
+  kind: "trend";
+  label: string;
+  /** Per-day values, oldest → newest. */
+  points: number[];
+}
+
+export type MetricRow = MeterRow | TextRow | TrendRow;
 
 export interface Provider {
   id: ProviderId;
