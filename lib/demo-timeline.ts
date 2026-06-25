@@ -79,31 +79,39 @@ const STEP_MS = 2000;
 
 let index = 0;
 let direction = 1;
-let started = false;
+let timerId: ReturnType<typeof setInterval> | undefined;
 const listeners = new Set<() => void>();
 
-function ensureStarted() {
-  if (started) return;
-  started = true;
+function tickDemoFrame() {
+  direction =
+    index >= FRAMES.length - 1 ? -1 : index <= 0 ? 1 : direction;
+  index += direction;
+  for (const listener of listeners) listener();
+}
+
+function startDemoTimer() {
+  if (timerId !== undefined || listeners.size === 0) return;
   if (
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
   ) {
     return; // hold the default frame for reduced-motion users
   }
-  setInterval(() => {
-    direction =
-      index >= FRAMES.length - 1 ? -1 : index <= 0 ? 1 : direction;
-    index += direction;
-    for (const listener of listeners) listener();
-  }, STEP_MS);
+  timerId = setInterval(tickDemoFrame, STEP_MS);
+}
+
+function stopDemoTimerIfIdle() {
+  if (listeners.size > 0 || timerId === undefined) return;
+  clearInterval(timerId);
+  timerId = undefined;
 }
 
 function subscribe(onChange: () => void) {
   listeners.add(onChange);
-  ensureStarted();
+  startDemoTimer();
   return () => {
     listeners.delete(onChange);
+    stopDemoTimerIfIdle();
   };
 }
 
