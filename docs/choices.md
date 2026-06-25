@@ -12,6 +12,7 @@
 - Announcement: chose a **slim sticky top bar** (`components/announcement-banner.tsx`) over a full section — a section is easy to scroll past; a sticky bar is a persistent, lightweight reminder. Blue (`--page-accent`), **not dismissible** (per request, stays until we change our minds — no X button).
 - `globals.css`: `body { overflow-x: hidden }` → `overflow-x: clip`. `hidden` turns body into a scroll container and breaks `position: sticky`; `clip` prevents horizontal overflow without that side effect. Root-cause fix for the sticky bar.
 - Scope kept to hero + banner per request; bottom Download CTA + footer left pointing at stable.
+- Demo panel footer (`components/panel/panel-footer.tsx`) now shows the beta version: removed the old stable-only filter that stripped pre-releases; `app/page.tsx` passes `panelVersion = beta?.version ?? version` to `MenuBar`/`Panel`. The site previews the upcoming app, so the popover should read the beta (e.g. "OpenUsage 0.7.0-beta.14"), falling back to stable when no beta exists.
 
 ### Maintainers section
 

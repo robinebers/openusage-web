@@ -87,6 +87,9 @@ export default async function Home() {
   ]);
 
   const betaUrl = beta?.url ?? RELEASES_URL;
+  // The site previews the upcoming app, so the demo panel reflects the beta
+  // version when available (falling back to the stable release otherwise).
+  const panelVersion = beta?.version ?? version;
 
   return (
     <div className="relative min-h-screen" style={{ background: "var(--page-bg)" }}>
@@ -99,7 +102,7 @@ export default async function Home() {
             icon inside the bar, so it's positioned by CSS (no JS measurement)
             and renders visible in the server HTML. */}
         <div className="max-lg:hidden">
-          <MenuBar version={version} />
+          <MenuBar version={panelVersion} />
         </div>
 
         {/* Hero: just the marketing content */}
@@ -129,7 +132,7 @@ export default async function Home() {
           </div>
           {/* Panel, flow-positioned below the tray bar */}
           <div className="px-3 md:px-12 w-full flex flex-col items-center md:items-end">
-            <Panel version={version} placement="flow" />
+            <Panel version={panelVersion} placement="flow" />
           </div>
         </div>
       </div>
