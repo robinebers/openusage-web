@@ -107,7 +107,7 @@ export default async function Home() {
 
         {/* Hero: just the marketing content */}
         <section className="max-w-7xl mx-auto px-6 lg:px-12 lg:pr-[380px] 2xl:pr-[340px]">
-          <div className="lg:min-h-[600px]">
+          <div className="lg:min-h-[920px]">
             <HeroContent
               betaUrl={betaUrl}
               betaVersion={beta?.version ?? null}
