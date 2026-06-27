@@ -5,13 +5,28 @@ import { ProviderGrid } from "@/components/provider-grid";
 import { NoiseOverlay } from "@/components/noise-overlay";
 import { TrackedLink } from "@/components/tracked-link";
 import { AnnouncementBanner } from "@/components/announcement-banner";
+import { DownloadButtons } from "@/components/download-buttons";
 import { Github, Gauge, BarChart3, Zap, Cpu, Radio } from "lucide-react";
 import { ApiExample } from "@/components/api-example";
 import { Maintainers } from "@/components/maintainers";
+import { cn } from "@/lib/utils";
+import { secondaryButtonClass } from "@/lib/button-styles";
 
-const RELEASES_URL = "https://github.com/robinebers/openusage/releases";
-const STABLE_URL =
-  "https://github.com/robinebers/openusage/releases/latest";
+const REPO = "robinebers/openusage";
+const RELEASES_URL = `https://github.com/${REPO}/releases`;
+/** Last release before the Swift rewrite (the old Tauri app). */
+const LEGACY_VERSION = "0.6.28";
+const LEGACY_URL = `${RELEASES_URL}/tag/v${LEGACY_VERSION}`;
+
+/** An optional token (set on Vercel) lifts the GitHub rate limit; calls are
+ *  unauthenticated otherwise. */
+function ghHeaders(): HeadersInit {
+  const token = process.env.GITHUB_TOKEN;
+  return {
+    Accept: "application/vnd.github+json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
 
 interface Contributor {
   login: string;
@@ -20,18 +35,34 @@ interface Contributor {
   contributions: number;
 }
 
-interface BetaRelease {
+interface Release {
   version: string;
   url: string;
 }
 
-/** Latest pre-release (beta channel). Betas ship ~daily, so we resolve this at
- *  request time (1h cache) instead of hardcoding a tag that goes stale. */
-async function getBetaRelease(): Promise<BetaRelease | null> {
+/** Latest stable release. GitHub's `releases/latest` already skips prereleases
+ *  and drafts, so it always tracks the stable channel. */
+async function getStableRelease(): Promise<Release | null> {
   try {
     const res = await fetch(
-      "https://api.github.com/repos/robinebers/openusage/releases?per_page=15",
-      { next: { revalidate: 3600 } }
+      `https://api.github.com/repos/${REPO}/releases/latest`,
+      { headers: ghHeaders(), next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { tag_name: string; html_url: string };
+    return { version: data.tag_name.replace(/^v/, ""), url: data.html_url };
+  } catch {
+    return null;
+  }
+}
+
+/** Latest pre-release (beta channel). Betas ship ~daily, so we resolve this at
+ *  request time (1h cache) instead of hardcoding a tag that goes stale. */
+async function getBetaRelease(): Promise<Release | null> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${REPO}/releases?per_page=30`,
+      { headers: ghHeaders(), next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
     const data = (await res.json()) as Array<{
@@ -48,52 +79,95 @@ async function getBetaRelease(): Promise<BetaRelease | null> {
   }
 }
 
-async function getVersion(): Promise<string | null> {
-  try {
-    const res = await fetch(
-      "https://github.com/robinebers/openusage/releases/latest/download/latest.json",
-      { next: { revalidate: 86400 } }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.version || null;
-  } catch {
-    return null;
+/** Contributors shown on the wall. The Swift rewrite lives on a fresh `main`
+ *  history, so the contributors endpoint only sees a handful of people. We merge
+ *  in everyone from the pre-Swift (Tauri) history — reachable via the v0.6.28
+ *  tag — so long-time contributors don't disappear. */
+async function getContributors(): Promise<Contributor[]> {
+  const [current, legacy] = await Promise.all([
+    fetchRepoContributors(),
+    fetchLegacyContributors(),
+  ]);
+
+  const merged = new Map<string, Contributor>();
+  for (const c of [...current, ...legacy]) {
+    const prev = merged.get(c.login);
+    if (prev) prev.contributions += c.contributions;
+    else merged.set(c.login, { ...c });
   }
+
+  return [...merged.values()]
+    .filter((c) => !c.login.includes("[bot]") && c.login !== "dependabot")
+    .sort((a, b) => b.contributions - a.contributions);
 }
 
-async function getContributors(): Promise<Contributor[]> {
+/** Contributors on the current default branch (the Swift app). */
+async function fetchRepoContributors(): Promise<Contributor[]> {
   try {
     const res = await fetch(
-      "https://api.github.com/repos/robinebers/openusage/contributors?per_page=30",
-      { next: { revalidate: 86400 } }
+      `https://api.github.com/repos/${REPO}/contributors?per_page=100`,
+      { headers: ghHeaders(), next: { revalidate: 86400 } }
     );
     if (!res.ok) return [];
-    const data = await res.json();
-    // Filter out bots
-    return (data as Contributor[]).filter(
-      (c) => !c.login.includes("[bot]") && c.login !== "dependabot"
-    );
+    return (await res.json()) as Contributor[];
   } catch {
     return [];
   }
 }
 
+/** Authors from the Tauri history, aggregated from commits on the v0.6.28 tag.
+ *  The contributors endpoint can't target a ref, so we count commits per author
+ *  (capped at a few pages — the Tauri history is ~500 commits). */
+async function fetchLegacyContributors(): Promise<Contributor[]> {
+  const counts = new Map<string, Contributor>();
+  try {
+    for (let page = 1; page <= 8; page++) {
+      const res = await fetch(
+        `https://api.github.com/repos/${REPO}/commits?sha=v${LEGACY_VERSION}&per_page=100&page=${page}`,
+        { headers: ghHeaders(), next: { revalidate: 86400 } }
+      );
+      if (!res.ok) break;
+      const commits = (await res.json()) as Array<{
+        author: { login: string; avatar_url: string; html_url: string } | null;
+      }>;
+      if (commits.length === 0) break;
+      for (const { author } of commits) {
+        if (!author?.login) continue;
+        const prev = counts.get(author.login);
+        if (prev) prev.contributions += 1;
+        else
+          counts.set(author.login, {
+            login: author.login,
+            avatar_url: author.avatar_url,
+            html_url: author.html_url,
+            contributions: 1,
+          });
+      }
+      if (commits.length < 100) break;
+    }
+  } catch {
+    // Return whatever we managed to collect.
+  }
+  return [...counts.values()];
+}
+
 export default async function Home() {
-  const [version, contributors, beta] = await Promise.all([
-    getVersion(),
-    getContributors(),
+  const [stable, beta, contributors] = await Promise.all([
+    getStableRelease(),
     getBetaRelease(),
+    getContributors(),
   ]);
 
+  const stableUrl = stable?.url ?? `${RELEASES_URL}/latest`;
+  const stableVersion = stable?.version ?? null;
   const betaUrl = beta?.url ?? RELEASES_URL;
-  // The site previews the upcoming app, so the demo panel reflects the beta
-  // version when available (falling back to the stable release otherwise).
-  const panelVersion = beta?.version ?? version;
+  const betaVersion = beta?.version ?? null;
+  // The demo panel mocks the shipping app, so it shows the latest stable version.
+  const panelVersion = stable?.version ?? null;
 
   return (
     <div className="relative min-h-screen" style={{ background: "var(--page-bg)" }}>
-      <AnnouncementBanner betaUrl={betaUrl} />
+      <AnnouncementBanner stableUrl={stableUrl} />
       <NoiseOverlay />
 
       {/* ── Menu bar + hero wrapper (positioning context for panel) ── */}
@@ -110,9 +184,11 @@ export default async function Home() {
           <div className="lg:min-h-[920px]">
             <HeroContent
               betaUrl={betaUrl}
-              betaVersion={beta?.version ?? null}
-              stableUrl={STABLE_URL}
-              stableVersion={version}
+              betaVersion={betaVersion}
+              stableUrl={stableUrl}
+              stableVersion={stableVersion}
+              legacyUrl={LEGACY_URL}
+              legacyVersion={LEGACY_VERSION}
             />
           </div>
         </section>
@@ -279,14 +355,7 @@ export default async function Home() {
               href="https://github.com/robinebers/openusage"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors hover:brightness-125"
-              style={{
-                border: "1px solid var(--btn-secondary-border)",
-                backgroundColor: "var(--btn-secondary-bg)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
-                color: "var(--page-fg)",
-              }}
+              className={cn(secondaryButtonClass, "gap-2 px-6 py-3 text-sm font-semibold")}
             >
               <Github className="w-4 h-4" />
               View on GitHub
@@ -339,26 +408,23 @@ export default async function Home() {
           Download OpenUsage for macOS. It&apos;s free, and you&apos;ll
           never have to guess your limits again.
         </p>
-        <div className="flex items-center justify-center gap-4">
-          <TrackedLink
-            event="cta_download_clicked"
-            href="https://github.com/robinebers/openusage/releases/latest"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
-            style={{
-              backgroundColor: "var(--page-accent)",
-              color: "var(--page-accent-fg)",
-            }}
-          >
-            Download for macOS
-          </TrackedLink>
+        <div className="mx-auto max-w-xl">
+          <DownloadButtons
+            eventPrefix="cta"
+            align="center"
+            stableUrl={stableUrl}
+            stableVersion={stableVersion}
+            betaUrl={betaUrl}
+            betaVersion={betaVersion}
+            legacyUrl={LEGACY_URL}
+            legacyVersion={LEGACY_VERSION}
+          />
         </div>
         <p
           className="text-xs mt-4 text-pretty"
           style={{ color: "var(--page-fg-subtle)" }}
         >
-          Requires macOS 14+{version ? <> &middot; v{version}</> : null} &middot; MIT License
+          Requires macOS 15+{stableVersion ? <> &middot; v{stableVersion}</> : null} &middot; MIT License
         </p>
       </section>
 

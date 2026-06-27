@@ -1,5 +1,33 @@
 # Choices
 
+## 2026-06-27
+
+### First stable launch: channel-correct CTAs + legacy anchored on the v0.6.28 tag
+
+- Stable channel resolved via GitHub `releases/latest` (guaranteed non-prerelease/non-draft); dropped `getVersion()`/`latest.json` (Tauri-updater-specific, and `releases/latest` is the canonical stable pointer now). Supersedes the 2026-06-25 "stable label from latest.json" note.
+- Beta `per_page` 15 → 30 so a stable release never falls off page 1 when many betas ship between stables (there were 16 betas between v0.6.28 and v0.7.0).
+- **Legacy anchored on the `v0.6.28` tag, not a `legacy` branch.** The user said the old app lives in a "legacy branch", but none exists in the repo; the `v0.6.28` tag is immutable and reaches the entire Tauri history (507 commits, 47 authors). One `LEGACY_VERSION = "0.6.28"` constant drives both the "Looking for v0.6.28?" download link and the contributor backfill.
+- Contributors restored (3 → 45) by merging default-branch `/contributors` (Swift `main`) with Tauri commit-authors. `/contributors` can't target a ref, so legacy authors are counted per-commit from `commits?sha=v0.6.28` (capped at 8 pages = 800 commits; history is ~500). Counts summed per login, bots filtered, sorted desc. Approximate counts are fine — the wall only sorts avatars.
+- Optional `GITHUB_TOKEN` in `ghHeaders()` (zero-config if unset): the page now makes ~9 GitHub calls per ISR regeneration (1 stable + 1 beta + 1 contributors + ~6 legacy-commit pages); a token lifts the 60/hr unauthenticated limit if set on Vercel. Still fully unauthenticated by default.
+- Bottom Download CTA now mirrors the hero (shared `components/download-buttons.tsx`) — supersedes the 2026-06-25 "scope kept to hero; bottom CTA left at stable" note; the user explicitly asked the bottom CTA to match.
+- Button layout per request: two-line buttons with the version as xs mono subtext ("Download Latest" / v0.7.0, "Join the Beta" / v0.7.0-beta.16). Legacy link rendered in both placements (default; trivial to drop from one later).
+- Hero badge "Beta {betaVersion} · Free · Open Source" → "macOS 15+ · Free · Open Source": versions now live on the buttons, so the badge surfaces the new system requirement instead. macOS floor bumped 14 → 15 per the user (Swift app's new minimum).
+
+### Unified secondary button + Antigravity provider
+
+- Secondary button root cause: it set `background-color` via inline `style` (`var(--btn-secondary-bg)`) while trying to hover with the `hover:bg-black/5` **class**. Inline styles beat utility classes, so the hover never applied — hence "no hover in the hero". The "View on GitHub" button avoided that by using `hover:brightness-125`, but that washes out the light border (already flagged 2026-06-22), so the two buttons looked different.
+- Fix: extracted one `secondaryButtonClass` (`lib/button-styles.ts`) — the white glassy skin with the background in a CLASS (so `hover:` wins) and a uniform `hover:bg-black/5` tint. Removed every inline bg/border/color/blur override and the `hover:brightness-125`. Both the "Join the Beta" button and "View on GitHub" now compose it with their own size/layout classes via `cn()`. Primary (accent) button left as-is — its `hover:brightness-110` works fine on a solid fill and wasn't part of the complaint.
+- Chose a shared class over a shadcn `Button` variant: the marketing surface uses its own `--page-*`/`--btn-secondary-*` palette (not shadcn's `--secondary`), and these are `<a>` links with differing padding/layout. A composable skin class is the least-friction "proper" fix.
+- Antigravity provider: icon + color taken from the `tauri-legacy` branch of `../openusage` (`plugins/antigravity/{plugin.json,icon.svg}`) per request. Ported the single SVG path to `AntigravityIcon` with `fill="currentColor"` (so `brandColor` tints it like the other marks, instead of the baked `#4285F4`). `brandColor: "#4285F4"` matches `--brand-antigravity` in `globals.css`. Added as the 6th entry in `lib/plugins.ts`.
+- `ProviderGrid` grid `grid-cols-5` → `grid-cols-3 sm:grid-cols-6`: six marks plus the long "Antigravity" label don't fit one mobile row, so it's 3×2 on phones and a single row of 6 from `sm` up. The hero (flex-wrap) needed no change.
+
+### Sentry noise filtering for injected scripts
+
+- Production Sentry noise was dominated by two errors from browser-injected scripts (`userscript.html` and `inpage.js`), not app bundle frames. Chose client-side filtering over Sentry issue mutation so future injected-script events are dropped before ingest while historical issues remain auditable.
+- Used Sentry's Turbopack application-key filtering with `drop-error-if-exclusively-contains-third-party-frames`, not the broader "contains third-party frames" mode, so mixed app + external stacks are still reported.
+- Added a narrow `beforeSend` fallback that drops events only when every stack frame filename is a known injected/extension script. This covers the current `app:///userscript.html` / `app:///inpage.js` issue shape without message-based filtering that could hide a real app error with similar text.
+- Disabled Sentry sending when `NODE_ENV !== "production"` because 11 of 13 unresolved issues were localhost development/Turbopack errors. Local development can still be inspected in the browser console without polluting production triage.
+
 ## 2026-06-25
 
 ### Production domain is www.openusage.ai (NOT openusage.dev)

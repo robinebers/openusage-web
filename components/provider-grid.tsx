@@ -15,7 +15,7 @@ export function ProviderGrid() {
         </p>
       </div>
 
-      <div className="grid grid-cols-5 items-start gap-3 sm:gap-8">
+      <div className="grid grid-cols-3 items-start gap-3 sm:grid-cols-6 sm:gap-8">
         {plugins.map(({ id, name, brandColor, Icon }) => (
           <div key={id} className="flex flex-col items-center gap-3">
             <Icon

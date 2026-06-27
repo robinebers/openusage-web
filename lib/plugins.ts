@@ -4,6 +4,7 @@ import {
   CursorIcon,
   DevinIcon,
   GrokIcon,
+  AntigravityIcon,
 } from "./icons";
 
 export interface Plugin {
@@ -24,4 +25,5 @@ export const plugins: Plugin[] = [
   { id: "cursor", name: "Cursor", brandColor: "#000000", Icon: CursorIcon },
   { id: "devin",  name: "Devin",  brandColor: "#000000", Icon: DevinIcon },
   { id: "grok",   name: "Grok",   brandColor: "#000000", Icon: GrokIcon },
+  { id: "antigravity", name: "Antigravity", brandColor: "#4285F4", Icon: AntigravityIcon },
 ];

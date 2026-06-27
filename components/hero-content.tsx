@@ -2,14 +2,15 @@
 
 import { GaugeIcon } from "@/lib/icons";
 import { plugins } from "@/lib/plugins";
-import { Download } from "lucide-react";
-import { track } from "@vercel/analytics";
+import { DownloadButtons } from "@/components/download-buttons";
 
 interface HeroContentProps {
   betaUrl: string;
   betaVersion: string | null;
   stableUrl: string;
   stableVersion: string | null;
+  legacyUrl: string;
+  legacyVersion: string;
 }
 
 export function HeroContent({
@@ -17,8 +18,9 @@ export function HeroContent({
   betaVersion,
   stableUrl,
   stableVersion,
+  legacyUrl,
+  legacyVersion,
 }: HeroContentProps) {
-  const stableLabel = stableVersion ?? "0.6.27";
   return (
     <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl 2xl:max-w-none">
       {/* Logo */}
@@ -63,37 +65,16 @@ export function HeroContent({
       </div>
 
       {/* CTAs */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-        <a
-          href={betaUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
-          style={{
-            backgroundColor: "var(--page-accent)",
-            color: "var(--page-accent-fg)",
-          }}
-          onClick={() => track("hero_download_clicked")}
-        >
-          <Download className="w-4 h-4" />
-          Download Latest Beta
-        </a>
-        <a
-          href={stableUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-colors bg-[var(--btn-secondary-bg)] hover:bg-black/5"
-          style={{
-            border: "1px solid var(--btn-secondary-border)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            color: "var(--page-fg)",
-          }}
-          onClick={() => track("hero_stable_download_clicked")}
-        >
-          Download {stableLabel} (stable)
-        </a>
-      </div>
+      <DownloadButtons
+        eventPrefix="hero"
+        align="start"
+        stableUrl={stableUrl}
+        stableVersion={stableVersion}
+        betaUrl={betaUrl}
+        betaVersion={betaVersion}
+        legacyUrl={legacyUrl}
+        legacyVersion={legacyVersion}
+      />
 
       {/* Channel badge */}
       <div>
@@ -104,7 +85,7 @@ export function HeroContent({
             backgroundColor: "rgba(0,0,0,0.05)",
           }}
         >
-          {betaVersion ? `Beta ${betaVersion}` : "Beta channel"} &middot; Free &middot; Open Source
+          macOS 15+ &middot; Free &middot; Open Source
         </span>
       </div>
     </div>
