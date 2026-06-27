@@ -4,11 +4,51 @@
 
 import * as Sentry from "@sentry/nextjs";
 
+const SENTRY_APPLICATION_KEY = "openusage-web";
+
+const injectedScriptFramePatterns = [
+  /^app:\/\/\/(?:inpage\.js|userscript\.html)$/,
+  /^(?:chrome|moz|safari-web)-extension:\/\//,
+];
+
+function isInjectedScriptFrame(filename: string) {
+  return injectedScriptFramePatterns.some((pattern) => pattern.test(filename));
+}
+
+function hasOnlyInjectedScriptFrames(event: {
+  exception?: {
+    values?: {
+      stacktrace?: {
+        frames?: { filename?: string | null }[];
+      };
+    }[];
+  };
+}) {
+  const frameFilenames =
+    event.exception?.values
+      ?.flatMap((value) => value.stacktrace?.frames ?? [])
+      .map((frame) => frame.filename)
+      .filter((filename): filename is string => Boolean(filename)) ?? [];
+
+  return (
+    frameFilenames.length > 0 &&
+    frameFilenames.every((filename) => isInjectedScriptFrame(filename))
+  );
+}
+
 Sentry.init({
   dsn: "https://ac636f5169da9321d8b7cb45b270bdbd@o4509751672700928.ingest.us.sentry.io/4511500219580416",
 
+  enabled: process.env.NODE_ENV === "production",
+
   // Add optional integrations for additional features
-  integrations: [Sentry.replayIntegration()],
+  integrations: [
+    Sentry.replayIntegration(),
+    Sentry.thirdPartyErrorFilterIntegration({
+      filterKeys: [SENTRY_APPLICATION_KEY],
+      behaviour: "drop-error-if-exclusively-contains-third-party-frames",
+    }),
+  ],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,
@@ -26,6 +66,14 @@ Sentry.init({
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
+
+  beforeSend(event) {
+    if (hasOnlyInjectedScriptFrames(event)) {
+      return null;
+    }
+
+    return event;
+  },
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

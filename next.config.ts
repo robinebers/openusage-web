@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+const sentryApplicationKey = "openusage-web";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -24,6 +25,10 @@ export default withSentryConfig(nextConfig, {
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+
+  _experimental: {
+    turbopackApplicationKey: sentryApplicationKey,
+  },
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
   widenClientFileUpload: true,
