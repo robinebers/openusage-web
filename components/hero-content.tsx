@@ -49,18 +49,16 @@ export function HeroContent({
         Track and customize the exact metrics and subscriptions that matter to you. Keep them at a glance in the menu bar. Just open the app, make it yours, and never look back.
       </p>
 
-      {/* Provider icons */}
-      <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+      {/* Provider marks (labels live in the dedicated section below) */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 sm:gap-x-5">
         {plugins.map(({ id, name, Icon }) => (
-          <div key={id} className="flex items-center gap-2">
-            <Icon className="w-6 h-6" style={{ color: "var(--page-fg-muted)" }} />
-            <span
-              className="hidden sm:inline text-sm font-medium"
-              style={{ color: "var(--page-fg-muted)" }}
-            >
-              {name}
-            </span>
-          </div>
+          <Icon
+            key={id}
+            className="h-6 w-6 sm:h-7 sm:w-7"
+            style={{ color: "var(--page-fg-muted)" }}
+            aria-label={name}
+            role="img"
+          />
         ))}
       </div>
 

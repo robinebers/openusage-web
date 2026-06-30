@@ -1,5 +1,15 @@
 # Choices
 
+## 2026-06-30
+
+### Pull in new providers (Copilot, OpenRouter, Z.ai) + label-less hero marks + dedicated card grid
+
+- Synced the web's provider list with the Swift app's current `main` provider set (`../openusage/Sources/OpenUsage/Providers/*`): Antigravity, Claude, Codex, Copilot, Cursor, Devin, Grok, OpenRouter, ZAI. The web previously showed 6; added **Copilot, OpenRouter, Z.ai** (now 9).
+- Opinionated default: the user wrote "copilot, openusage, z.ai etc." There is no `openusage` provider in the Swift app (only an `openusage` app-icon mark used in the share card, not a tracked provider). The only provider in Swift `main` not yet on the web besides Copilot + Z.ai is **OpenRouter**, so I interpreted "openusage" as "OpenRouter" and added it. If a different provider was meant, drop it from `lib/plugins.ts`.
+- Icons + brand colors sourced from the `tauri-legacy` branch per request (`plugins/<id>/plugin.json` `brandColor` + `plugins/<id>/icon.svg`): Copilot `#A855F7`, Z.ai `#2D2D2D`. OpenRouter is **not** in `tauri-legacy`, so its icon path came from the Swift app's bundled resource `Sources/OpenUsage/Resources/ProviderIcons/openrouter.svg` (single path, `currentColor`) and its brand color set to `#000000` (OpenRouter's mark is monochrome; matches the other near-black marks). Ported all three to `currentColor`-filled React components in `lib/icons.tsx` so `brandColor` tints them like the existing marks (Copilot's source `fill="white"` was switched to `currentColor`).
+- Hero (`components/hero-content.tsx`): removed the per-mark name labels — the hero now shows a clean flex-wrap of muted provider marks only (labels live in the dedicated section). Marks carry `aria-label`/`role="img"` for a11y.
+- Dedicated section (`components/provider-grid.tsx`): rebuilt as a responsive card grid — `grid-cols-2 sm:grid-cols-3` (9 marks → clean 3×3 from `sm` up, 2-col on phones). Each card: subtle `--page-card` fill + `--page-card-border`, brand-tinted icon (h-9/sm:h-11) in a fixed 14×/16× box, name below. Hover: `-translate-y-0.5` lift + `group-hover:scale-110` icon pop. Added a trailing "More providers on the way — everything in the app is plugin-driven." note. `tsc --noEmit` + `eslint` pass.
+
 ## 2026-06-27
 
 ### First stable launch: channel-correct CTAs + legacy anchored on the v0.6.28 tag

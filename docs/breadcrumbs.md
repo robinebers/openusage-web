@@ -1,5 +1,9 @@
 # Breadcrumbs
 
+## 2026-06-30
+
+- Synced web provider list with Swift app `main` (9 providers). Added Copilot, OpenRouter, Z.ai to `lib/plugins.ts` + `lib/icons.tsx`. Icons/brand colors from `tauri-legacy` (Copilot, Z.ai) and Swift `ProviderIcons/openrouter.svg` (OpenRouter, not in tauri-legacy). Hero marks are now label-less; `components/provider-grid.tsx` rebuilt as a responsive 2/3-col card grid with hover lift + icon pop. See `docs/choices.md` for the "openusage"→OpenRouter interpretation. `tsc` + `eslint` clean.
+
 ## 2026-06-27
 
 ### First stable launch: dual-channel CTAs + restored contributors
