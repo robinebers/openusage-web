@@ -4,7 +4,6 @@ import { HeroContent } from "@/components/hero-content";
 import { ProviderGrid } from "@/components/provider-grid";
 import { NoiseOverlay } from "@/components/noise-overlay";
 import { TrackedLink } from "@/components/tracked-link";
-import { AnnouncementBanner } from "@/components/announcement-banner";
 import { DownloadButtons } from "@/components/download-buttons";
 import { Github, Gauge, BarChart3, Zap, Cpu, Radio } from "lucide-react";
 import { ApiExample } from "@/components/api-example";
@@ -16,7 +15,6 @@ const REPO = "robinebers/openusage";
 const RELEASES_URL = `https://github.com/${REPO}/releases`;
 /** Last release before the Swift rewrite (the old Tauri app). */
 const LEGACY_VERSION = "0.6.28";
-const LEGACY_URL = `${RELEASES_URL}/tag/v${LEGACY_VERSION}`;
 
 /** An optional token (set on Vercel) lifts the GitHub rate limit; calls are
  *  unauthenticated otherwise. */
@@ -167,7 +165,6 @@ export default async function Home() {
 
   return (
     <div className="relative min-h-screen" style={{ background: "var(--page-bg)" }}>
-      <AnnouncementBanner stableUrl={stableUrl} />
       <NoiseOverlay />
 
       {/* ── Menu bar + hero wrapper (positioning context for panel) ── */}
@@ -187,8 +184,6 @@ export default async function Home() {
               betaVersion={betaVersion}
               stableUrl={stableUrl}
               stableVersion={stableVersion}
-              legacyUrl={LEGACY_URL}
-              legacyVersion={LEGACY_VERSION}
             />
           </div>
         </section>
@@ -416,8 +411,6 @@ export default async function Home() {
             stableVersion={stableVersion}
             betaUrl={betaUrl}
             betaVersion={betaVersion}
-            legacyUrl={LEGACY_URL}
-            legacyVersion={LEGACY_VERSION}
           />
         </div>
         <p

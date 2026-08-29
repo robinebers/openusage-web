@@ -9,8 +9,6 @@ interface HeroContentProps {
   betaVersion: string | null;
   stableUrl: string;
   stableVersion: string | null;
-  legacyUrl: string;
-  legacyVersion: string;
 }
 
 export function HeroContent({
@@ -18,8 +16,6 @@ export function HeroContent({
   betaVersion,
   stableUrl,
   stableVersion,
-  legacyUrl,
-  legacyVersion,
 }: HeroContentProps) {
   return (
     <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl 2xl:max-w-none">
@@ -70,8 +66,6 @@ export function HeroContent({
         stableVersion={stableVersion}
         betaUrl={betaUrl}
         betaVersion={betaVersion}
-        legacyUrl={legacyUrl}
-        legacyVersion={legacyVersion}
       />
 
       {/* Channel badge */}

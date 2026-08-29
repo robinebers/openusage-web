@@ -1,5 +1,11 @@
 # Choices
 
+## 2026-08-29
+
+### Drop launch notices
+
+- User asked to remove the "OpenUsage has changed" bar and the "Looking for" notice. Trashed `announcement-banner.tsx` (only existed for that bar). Dropped `legacyUrl` / `legacyVersion` from the download buttons; `LEGACY_VERSION` stays for the Tauri contributor backfill. `LEGACY_URL` deleted.
+
 ## 2026-06-30
 
 ### Pull in new providers (Copilot, OpenRouter, Z.ai) + label-less hero marks + dedicated card grid
