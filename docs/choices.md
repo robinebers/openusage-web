@@ -169,3 +169,19 @@
 - `useDemoStripGroups` returned the static `stripGroups[id]`, so tray percentages stayed Session-then-Weekly while the popover swapped Weekly above Session (F2/F3) — the two surfaces contradicted each other mid-animation.
 - Fix (`lib/demo-timeline.ts`): derive tray values from the live frame — map `frame.rows[id]` → `ROWS[id][key]`, keep `kind === "meter"`, emit `` `${percent}%` ``. Each provider has exactly two meter rows in every frame, so tray count stays stable at 2 and the order now follows the popover.
 - Removed the now-dead `stripGroups` (and its `StripGroup` import) from `lib/mock-data.ts`; `ROWS` (meter `percent`) is the single source of truth for tray + popover. The two stacked tray numbers are positional (`StripValues` keys by index), so the swap is a text update, not a slide — matches the native tray; `tsc` passes.
+
+## 2026-09-25
+
+### Rebrand to Attention Machine look + #0731f8 + app mockup refresh
+
+- Brand blue `#0731f8` (hover `#0526cc`), copied landing tokens from `../attentionmachine/apps/landing`: ink `#111`, muted `#888`, line `#dcdcdc`, paper `#f1f1f1`, tint `#e6eaff` (retinted for the new blue), marker `#ffe25a`. Archivo (wdth axis) replaces Geist Sans; Geist Mono kept for code. `display` + `marker` utilities ported verbatim.
+- Buttons: rounded-full pills (`lib/button-styles.ts` primary + secondary). Kept the "Download Latest" / "Join the Beta" labels (earlier explicit request).
+- Sections now follow the landing poster layout: left-aligned display H2 + brand second line, `border-t border-line` separators, `border-t-4 border-brand` feature/maintainer columns, bordered hairline grids, `bg-tint` final CTA. Dropped the noise/glow overlay (landing is flat white); trashed `components/noise-overlay.tsx`.
+- Popover meters stay macOS system blue `#007aff` (not brand) so the mockup reads like the real app, which uses `NSColor.systemBlue`.
+- Mockup synced to Swift `main`: Total Spend card (capsule period picker, morphing donut, ranked legend, app `TotalSpendPalette` colors), provider mark leads the header (grip gone), pace tick + "~N% left at reset" note, flame "Limit in …", On Demand rows behind a chevron, "Options ⌄" footer capsule. Popover is 340px with a fixed 600px viewport (content runs under the footer like the app's scroll view) so expands never resize it.
+- Choreography: expand Claude → Total Spend to 30 Days → Codex/Claude swap → Codex Weekly above Session → Codex expands; ping-pong.
+- Providers: added Ollama + OpenCode (11, `ProviderCatalog` order). Colors from `TotalSpendPalette`; Codex `#74AA9C` → `#10A37F`, OpenRouter → `#6467F2`. 12th grid cell "Add yours" → `docs/adding-a-provider.md`.
+- API section now shows `/v1/limits` (`openusage.limits.v1`) + the `openusage` CLI; `/v1/usage` is deprecated upstream.
+- Features rewritten around what the app ships now (Total Spend, pace warnings, menu bar pins, Customize, multi-account + iCloud, screen-share hiding).
+- Footer newsletter → `https://robinebers.com` (per request).
+- Not updated: `app/opengraph-image.png` / `twitter-image.png` are static PNGs still in the old blue.

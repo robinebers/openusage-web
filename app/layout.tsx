@@ -1,8 +1,14 @@
-import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
+import type { Metadata, Viewport } from "next";
+import { Archivo } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
+});
 
 const siteUrl = "https://www.openusage.ai";
 const title =
@@ -57,12 +63,16 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0731f8",
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "OpenUsage",
   applicationCategory: "DeveloperApplication",
-  operatingSystem: "macOS 14+",
+  operatingSystem: "macOS 15+",
   description,
   url: siteUrl,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -75,10 +85,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${archivo.variable} ${GeistMono.variable}`}>
+      <body className="antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

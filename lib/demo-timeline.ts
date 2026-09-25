@@ -1,77 +1,54 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { MeterRow, Provider, StripGroup } from "./types";
-import { PROVIDER_META, ROWS, type DemoProviderId } from "./mock-data";
+import type { MeterRow, Provider, SpendPeriod, StripGroup } from "./types";
+import { ON_DEMAND, PROVIDER_META, ROWS, type DemoProviderId } from "./mock-data";
 
 interface Frame {
   /** Section order, top to bottom (also drives the menu-bar order). */
   order: DemoProviderId[];
-  /** Visible row keys per provider, in order. */
+  /** Always Visible row keys per provider, in order. */
   rows: Record<DemoProviderId, string[]>;
+  /** Providers whose On Demand rows are revealed. */
+  expanded: DemoProviderId[];
+  /** Total Spend period. */
+  period: SpendPeriod;
 }
 
+const DEFAULT_ROWS: Frame["rows"] = {
+  claude: ["session", "weekly", "fable"],
+  codex: ["session", "weekly"],
+  cursor: ["usage", "auto", "api"],
+};
+
 /**
- * A fixed, looping choreography that mirrors how the native app lets you
- * rearrange providers and metrics. It plays forward beat-by-beat to a "full"
- * state, then runs the same beats in reverse so the loop is seamless. Each beat
- * isolates a single change so the motion always reads clearly:
+ * A fixed, looping choreography that mirrors what the native app does. It plays
+ * forward beat-by-beat, then runs the same beats in reverse so the loop is
+ * seamless. Each beat isolates a single change so the motion reads clearly:
  *
- *  F0  default order (Codex, Claude, Cursor)
- *  F1  Codex and Claude swap places (and the menu bar swaps with them)
- *  F2  Claude's Weekly moves above its Session
- *  F3  Codex's Weekly moves above its Session
- *  F4  Claude's Today/Yesterday/Last 30 Days collapse into Extra usage
- *  F5  Codex's Last 30 Days becomes Extra usage and Rate Limit Resets pops up
+ *  F0  default (Claude, Codex, Cursor; Total Spend on Today)
+ *  F1  Claude expands its On Demand spend rows
+ *  F2  Total Spend switches to 30 Days (the ring morphs)
+ *  F3  Codex and Claude swap places (and the menu bar swaps with them)
+ *  F4  Codex's Weekly moves above its Session
+ *  F5  Codex expands, revealing its spend + Rate Limit Resets
  */
 const FRAMES: Frame[] = [
+  { order: ["claude", "codex", "cursor"], rows: DEFAULT_ROWS, expanded: [], period: "today" },
+  { order: ["claude", "codex", "cursor"], rows: DEFAULT_ROWS, expanded: ["claude"], period: "today" },
+  { order: ["claude", "codex", "cursor"], rows: DEFAULT_ROWS, expanded: ["claude"], period: "last30" },
+  { order: ["codex", "claude", "cursor"], rows: DEFAULT_ROWS, expanded: ["claude"], period: "last30" },
   {
     order: ["codex", "claude", "cursor"],
-    rows: {
-      claude: ["session", "weekly", "today", "yesterday", "last30"],
-      codex: ["session", "weekly", "last30"],
-      cursor: ["usage", "auto", "api", "extra", "trend"],
-    },
+    rows: { ...DEFAULT_ROWS, codex: ["weekly", "session"] },
+    expanded: ["claude"],
+    period: "last30",
   },
   {
-    order: ["claude", "codex", "cursor"],
-    rows: {
-      claude: ["session", "weekly", "today", "yesterday", "last30"],
-      codex: ["session", "weekly", "last30"],
-      cursor: ["usage", "auto", "api", "extra", "trend"],
-    },
-  },
-  {
-    order: ["claude", "codex", "cursor"],
-    rows: {
-      claude: ["weekly", "session", "today", "yesterday", "last30"],
-      codex: ["session", "weekly", "last30"],
-      cursor: ["usage", "auto", "api", "extra", "trend"],
-    },
-  },
-  {
-    order: ["claude", "codex", "cursor"],
-    rows: {
-      claude: ["weekly", "session", "today", "yesterday", "last30"],
-      codex: ["weekly", "session", "last30"],
-      cursor: ["usage", "auto", "api", "extra", "trend"],
-    },
-  },
-  {
-    order: ["claude", "codex", "cursor"],
-    rows: {
-      claude: ["weekly", "session", "extra"],
-      codex: ["weekly", "session", "last30"],
-      cursor: ["usage", "auto", "api", "extra", "trend"],
-    },
-  },
-  {
-    order: ["claude", "codex", "cursor"],
-    rows: {
-      claude: ["weekly", "session", "extra"],
-      codex: ["weekly", "session", "extra", "ratelimit"],
-      cursor: ["usage", "auto", "api", "extra", "trend"],
-    },
+    order: ["codex", "claude", "cursor"],
+    rows: { ...DEFAULT_ROWS, codex: ["weekly", "session"] },
+    expanded: ["claude", "codex"],
+    period: "last30",
   },
 ];
 
@@ -132,7 +109,13 @@ export function useDemoSections(): Provider[] {
     name: PROVIDER_META[id].name,
     plan: PROVIDER_META[id].plan,
     rows: frame.rows[id].map((key) => ROWS[id][key]).filter((r) => r !== undefined),
+    more: ON_DEMAND[id].map((key) => ROWS[id][key]).filter((r) => r !== undefined),
+    expanded: frame.expanded.includes(id),
   }));
+}
+
+export function useDemoSpendPeriod(): SpendPeriod {
+  return useFrame().period;
 }
 
 /** Ordered menu-bar strip groups. Mirrors both the section order AND each

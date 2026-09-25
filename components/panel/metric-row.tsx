@@ -1,5 +1,4 @@
-import type { CSSProperties } from "react";
-import { Info, Flame } from "lucide-react";
+import { Flame } from "lucide-react";
 import type { MetricRow as MetricRowType, MeterRow, TextRow, TrendRow, MetricSeverity } from "@/lib/types";
 
 const meterColor: Record<MetricSeverity, string> = {
@@ -14,59 +13,62 @@ export function MetricRow({ row }: { row: MetricRowType }) {
   return <TextRowView row={row} />;
 }
 
-/** Bounded metric: label (+ optional flame) → capsule meter → headline / reset reading. */
+/** Bounded metric: label (+ flame warning or pace note) → capsule meter (+ pace tick) → headline / reset reading. */
 function MeterRowView({ row }: { row: MeterRow }) {
-  const severity = row.severity ?? "normal";
-  const fill: CSSProperties = { width: `${row.percent}%`, backgroundColor: meterColor[severity] };
+  const color = meterColor[row.severity ?? "normal"];
 
   return (
-    <div className="px-3.5 py-2">
-      <div className="mb-1.5 flex items-center justify-between gap-2">
+    <div className="flex flex-col gap-1 px-3.5 py-2.5">
+      <div className="flex items-center justify-between gap-2">
         <span className="text-[13px] font-semibold text-foreground">{row.label}</span>
-        {row.warning && (
-          // Only the flame carries the severity color; the copy stays muted —
-          // matching the native app (tint on glass is reserved for the symbol).
-          <span className="flex items-center gap-1 text-[12px] text-muted-foreground">
-            <Flame className="h-3 w-3" style={{ color: meterColor[severity] }} />
+        {row.warning ? (
+          // Only the flame carries the severity color; the copy stays secondary, like the app.
+          <span className="flex items-center gap-[3px] text-[12px] text-muted-foreground">
+            <Flame className="h-[11px] w-[11px] fill-current" style={{ color }} />
             {row.warning}
           </span>
+        ) : row.note ? (
+          <span className="text-[12px] text-muted-foreground">{row.note}</span>
+        ) : null}
+      </div>
+
+      <div className="relative h-[5px] w-full rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.08)" }}>
+        {row.percent > 0 && (
+          <div
+            className="h-full min-w-[5px] rounded-full transition-[width] duration-500"
+            style={{ width: `${row.percent}%`, backgroundColor: color }}
+          />
+        )}
+        {row.pace !== undefined && (
+          // Even-pace tick: pokes out above and below the bar without changing its height.
+          <div
+            className="absolute -top-[2px] h-[9px] w-[2px] -translate-x-1/2 rounded-[1px]"
+            style={{ left: `${row.pace}%`, backgroundColor: "rgba(0,0,0,0.55)" }}
+          />
         )}
       </div>
 
-      {/* Full-width capsule meter — flat severity color over a quiet track. */}
-      <div
-        className="h-1.5 w-full overflow-hidden rounded-full"
-        style={{ backgroundColor: "rgba(0,0,0,0.09)" }}
-      >
-        <div className="h-full rounded-full transition-[width] duration-500" style={fill} />
-      </div>
-
-      <div className="mt-1.5 flex items-center justify-between">
-        <span className="text-[12px] tabular-nums text-foreground">{row.headline}</span>
-        <span className="text-[12px] text-muted-foreground">{row.trailing}</span>
+      <div className="flex items-baseline justify-between gap-2 text-[12px]">
+        <span className="tabular-nums text-foreground">{row.headline}</span>
+        <span className="text-muted-foreground">{row.trailing}</span>
       </div>
     </div>
   );
 }
 
 /** Usage Trend: label on the left, a right-aligned day-by-day bar sparkline.
- *  Bars are proportional to the window's peak (a true zero shows a thin stub),
- *  in meter-blue so the trend reads as part of the card's visual language. */
+ *  Bars are proportional to the window's peak (a true zero shows a thin stub). */
 const TREND_HEIGHT = 22;
 
 function TrendRowView({ row }: { row: TrendRow }) {
   const peak = Math.max(1, ...row.points);
   return (
-    <div className="flex items-center justify-between gap-2 px-3.5 py-[5px]">
+    <div className="flex items-center justify-between gap-2 px-3.5 py-1.5">
       <span className="text-[12px] font-semibold text-foreground">{row.label}</span>
-      <div
-        className="flex items-end gap-px"
-        style={{ height: TREND_HEIGHT, width: 150 }}
-      >
+      <div className="flex items-end gap-px" style={{ height: TREND_HEIGHT, width: 150 }}>
         {row.points.map((value, i) => {
-          const ratio = peak > 0 ? Math.min(1, value / peak) : 0;
-          const height =
-            value <= 0 ? 2 : Math.max(TREND_HEIGHT * 0.18, TREND_HEIGHT * ratio);
+          const ratio = Math.min(1, value / peak);
+          const height = value <= 0 ? 2 : Math.max(TREND_HEIGHT * 0.18, TREND_HEIGHT * ratio);
           return (
             <div
               key={i}
@@ -83,12 +85,14 @@ function TrendRowView({ row }: { row: TrendRow }) {
 /** Unbounded metric: label on the left, value on the right. No bar. */
 function TextRowView({ row }: { row: TextRow }) {
   return (
-    <div className="flex items-center justify-between gap-3 px-3.5 py-[5px]">
-      <span className="flex items-center gap-1 text-[12px] font-medium text-foreground">
-        {row.label}
-        {row.info && <Info className="h-3 w-3 text-muted-foreground/70" />}
+    <div className="flex items-center justify-between gap-3 px-3.5 py-1.5 text-[12px]">
+      <span className="font-semibold text-foreground">{row.label}</span>
+      <span className="flex items-center gap-1 tabular-nums text-foreground">
+        {row.dot && (
+          <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: meterColor[row.dot] }} />
+        )}
+        {row.value}
       </span>
-      <span className="text-[12px] tabular-nums text-muted-foreground">{row.value}</span>
     </div>
   );
 }

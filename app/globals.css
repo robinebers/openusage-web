@@ -35,9 +35,41 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-sans: var(--font-geist-sans), sans-serif;
-  --font-display: var(--font-geist-sans), sans-serif;
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* ── Brand tokens (shared with the Attention Machine landing) ── */
+@theme {
+  --color-ink: #111111;
+  --color-muted: #888888;
+  --color-line: #dcdcdc;
+  --color-brand: #0731f8;
+  --color-brand-deep: #0526cc;
+  --color-marker: #ffe25a;
+  --color-tint: #e6eaff;
+  --color-paper: #f1f1f1;
+  --spacing-gutter: clamp(20px, 5vw, 72px);
+}
+
+/* Poster display type: heavy, slightly condensed, tight. */
+@utility display {
+  font-weight: 800;
+  font-stretch: 90%;
+  letter-spacing: -0.045em;
+}
+
+/* Low marker band behind a phrase; repeats on every wrapped line. */
+@utility marker {
+  padding: 0 0.06em;
+  background: linear-gradient(
+    transparent 58%,
+    var(--color-marker) 58%,
+    var(--color-marker) 92%,
+    transparent 92%
+  );
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 /* ── Panel theme (light — same as openusage app :root) ── */
@@ -71,99 +103,38 @@
   --sidebar-ring: oklch(0.707 0.022 261.325);
 }
 
-/* ── Page-level tokens (light — brand blue accent on white) ── */
+/* ── Page-level tokens ── */
 :root {
-  --radius: 0.625rem;
-  --background: #ffffff;
-  --foreground: #0a0a0c;
-  --card: #ffffff;
-  --card-foreground: #0a0a0c;
-  --popover: #ffffff;
-  --popover-foreground: #0a0a0c;
-  --primary: #18181b;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f5f7;
-  --secondary-foreground: #18181b;
-  --muted: #f4f5f7;
-  --muted-foreground: #5b6068;
-  --accent: #f4f5f7;
-  --accent-foreground: #18181b;
-  --destructive: #ef4444;
-  --border: #e6e8ec;
-  --input: #e6e8ec;
-  --ring: #2b7fff;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #0a0a0c;
-  --sidebar-primary: #18181b;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f5f7;
-  --sidebar-accent-foreground: #18181b;
-  --sidebar-border: #e6e8ec;
-  --sidebar-ring: #2b7fff;
-
-  /* Page-specific extras */
-  --page-bg: #ffffff;
-  --page-fg: #0a0a0c;
-  --page-fg-muted: #5b6068;
-  --page-fg-subtle: #8b9098;
-  --page-accent: #2b7fff;
-  --page-accent-fg: #ffffff;
-  --page-border: #e6e8ec;
-
-  /* Light surface for cards/sections */
-  --page-card: #f7f8fa;
-  --page-card-border: #e9ebef;
-
-  /* Secondary button */
-  --btn-secondary-bg: #ffffff;
-  --btn-secondary-border: #d9dce1;
+  color-scheme: light;
 
   /* macOS menu bar (stays dark — it represents the OS chrome) */
   --bar-bg: rgba(22, 24, 28, 0.92);
   --bar-fg: rgba(255, 255, 255, 0.92);
 
-  /* Provider brand colors */
-  --brand-cursor: #000000;
-  --brand-claude: #de7356;
-  --brand-codex: #74aa9c;
-  --brand-copilot: #a855f7;
-  --brand-devin: #000000;
-  --brand-grok: #000000;
-  --brand-antigravity: #4285f4;
-  --brand-amp: #f34e3f;
-  --brand-kimi: #000000;
-  --brand-gemini: #4285f4;
-  --brand-minimax: #f5433c;
-  --brand-kiro: #c09cff;
-  --brand-factory: #020202;
-  --brand-perplexity: #20808d;
-  --brand-synthetic: #000000;
-  --brand-zai: #2d2d2d;
-  --brand-opencode-go: #000000;
-
-  /* Meter severity (matches the native app: blue healthy, amber/red as it runs out) */
-  --meter-normal: #2b7fff;
-  --meter-warning: #eab308;
-  --meter-critical: #ef4444;
+  /* Meter severity: the app's macOS system palette (systemBlue/Yellow/Red),
+     not the site brand, so the popover mockup reads like the real app. */
+  --meter-normal: #007aff;
+  --meter-warning: #ffcc00;
+  --meter-critical: #ff3b30;
 }
 
 body {
-  background: var(--page-bg);
-  color: var(--page-fg);
-  font-family: var(--font-geist-sans), sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   /* `clip` (not `hidden`) prevents horizontal overflow without turning <body>
-     into a scroll container, which would break the sticky announcement bar. */
+     into a scroll container. */
   overflow-x: clip;
 }
 
-/* ── Hero highlight ── */
-.hero-highlight {
-  color: var(--page-accent);
+h1,
+h2,
+h3 {
+  text-wrap: pretty;
 }
 
-/* ── Selection ── */
 ::selection {
-  background: color-mix(in oklab, var(--page-accent) 18%, transparent);
-  color: var(--page-fg);
+  background: var(--color-tint);
+  color: var(--color-ink);
 }
 

@@ -26,7 +26,7 @@ function highlightJson(json: string) {
     } else if (match[4] !== undefined) {
       parts.push({ text: match[4], color: "#fde68a" }); // amber-200
     } else if (match[5] !== undefined) {
-      parts.push({ text: match[5], color: "var(--page-fg-subtle)" });
+      parts.push({ text: match[5], color: "#888888" });
     }
 
     last = match.index + match[0].length;
@@ -39,49 +39,34 @@ function highlightJson(json: string) {
   return parts;
 }
 
-const response = `[
-  {
-    "providerId": "claude",
-    "displayName": "Claude",
-    "plan": "Team 5x",
-    "lines": [
-      {
-        "type": "progress",
-        "label": "Session",
-        "used": 7,
-        "limit": 100,
-        "format": { "kind": "percent" },
-        "resetsAt": "2026-03-31T08:00:00.000Z",
-        "color": null
-      },
-      {
-        "type": "text",
-        "label": "Today",
-        "value": "$1.33 \u00b7 4.6M tokens",
-        "color": null,
-        "subtitle": null
+const response = `{
+  "schema": "openusage.limits.v1",
+  "providers": {
+    "claude": {
+      "displayName": "Claude",
+      "plan": "Team 5x",
+      "stale": false,
+      "resources": {
+        "weekly": {
+          "kind": "consumption",
+          "unit": "percent",
+          "used": 64,
+          "limit": 100,
+          "remaining": 36,
+          "resetsAt": "2026-09-26T15:00:00.000Z"
+        }
       }
-    ],
-    "fetchedAt": "2026-03-31T05:19:39.000Z"
-  }
-]`;
+    }
+  },
+  "errors": []
+}`;
 
 const highlighted = highlightJson(response);
 
 export function ApiExample() {
   return (
-    <div
-      className="rounded-xl overflow-hidden font-mono text-xs"
-      style={{
-        backgroundColor: "#0d0f13",
-        border: "1px solid rgba(255,255,255,0.07)",
-      }}
-    >
-      {/* Response */}
-      <pre
-        className="px-4 py-4 leading-relaxed overflow-x-auto"
-        style={{ color: "var(--page-fg-subtle)" }}
-      >
+    <div className="overflow-hidden rounded-2xl bg-ink font-mono text-xs">
+      <pre className="overflow-x-auto p-5 leading-relaxed text-muted">
         <code>
           {highlighted.map((part, i) =>
             part.color ? (

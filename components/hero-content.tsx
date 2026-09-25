@@ -1,8 +1,7 @@
-"use client";
-
-import { GaugeIcon } from "@/lib/icons";
 import { plugins } from "@/lib/plugins";
 import { DownloadButtons } from "@/components/download-buttons";
+import { Logo, Marker } from "@/components/brand";
+import { CopyCommand } from "@/components/copy-command";
 
 interface HeroContentProps {
   betaUrl: string;
@@ -18,67 +17,43 @@ export function HeroContent({
   stableVersion,
 }: HeroContentProps) {
   return (
-    <div className="flex flex-col justify-center gap-6 lg:gap-8 pt-12 lg:pt-24 pb-16 max-w-xl 2xl:max-w-none">
-      {/* Logo */}
-      <div className="flex items-center gap-2">
-        <GaugeIcon className="w-5 h-5" style={{ color: "var(--page-fg)" }} />
-        <span
-          className="text-sm font-semibold tracking-tight"
-          style={{ color: "var(--page-fg)" }}
-        >
-          OpenUsage
-        </span>
-      </div>
+    // Desktop width = the room left of the popover, which hangs off the menu bar's right edge.
+    <div className="flex max-w-xl flex-col gap-7 pt-12 pb-16 lg:max-w-[min(740px,calc(100vw_-_620px))] lg:pt-24">
+      <Logo className="text-[22px]" />
 
-      {/* Headline */}
-      <div className="space-y-4 text-pretty">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-pretty">
-          The Only AI Usage Tracker That&apos;s <span style={{ color: "var(--page-accent)" }}>Truly Yours</span>
-        </h1>
-      </div>
+      <h1 className="display text-[clamp(44px,5.6vw,80px)] leading-[.92]">
+        The Only AI Usage Tracker That&apos;s <Marker>Truly&nbsp;Yours</Marker>
+      </h1>
 
-      {/* Tagline */}
-      <p
-        className="text-sm sm:text-base lg:text-lg leading-relaxed text-balance 2xl:max-w-xl"
-        style={{ color: "var(--page-fg-muted)" }}
-      >
-        Track and customize the exact metrics and subscriptions that matter to you. Keep them at a glance in the menu bar. Just open the app, make it yours, and never look back.
+      <p className="text-balance text-[clamp(20px,2vw,26px)] leading-[1.2] font-bold tracking-[-.03em] text-brand">
+        All your AI limits, right in your menu bar.
+      </p>
+
+      <p className="text-pretty text-[clamp(17px,1.6vw,20px)] leading-normal">
+        Track the exact metrics and subscriptions that matter to you. See what
+        they cost, know before you run out, and never get cut off by surprise.
       </p>
 
       {/* Provider marks (labels live in the dedicated section below) */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 sm:gap-x-5">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3 text-muted sm:gap-x-5">
         {plugins.map(({ id, name, Icon }) => (
-          <Icon
-            key={id}
-            className="h-6 w-6 sm:h-7 sm:w-7"
-            style={{ color: "var(--page-fg-muted)" }}
-            aria-label={name}
-            role="img"
-          />
+          <Icon key={id} className="h-6 w-6" aria-label={name} role="img" />
         ))}
       </div>
 
-      {/* CTAs */}
-      <DownloadButtons
-        eventPrefix="hero"
-        align="start"
-        stableUrl={stableUrl}
-        stableVersion={stableVersion}
-        betaUrl={betaUrl}
-        betaVersion={betaVersion}
-      />
-
-      {/* Channel badge */}
-      <div>
-        <span
-          className="text-xs font-mono px-2 py-1 rounded"
-          style={{
-            color: "var(--page-fg-muted)",
-            backgroundColor: "rgba(0,0,0,0.05)",
-          }}
-        >
-          macOS 15+ &middot; Free &middot; Open Source
-        </span>
+      <div className="flex flex-col gap-3.5">
+        <DownloadButtons
+          eventPrefix="hero"
+          align="start"
+          stableUrl={stableUrl}
+          stableVersion={stableVersion}
+          betaUrl={betaUrl}
+          betaVersion={betaVersion}
+        />
+        <p className="text-[15px] text-muted">
+          macOS 15+ &middot; Free and open source &middot; or{" "}
+          <CopyCommand command="brew install --cask openusage" event="hero_brew_copied" />
+        </p>
       </div>
     </div>
   );

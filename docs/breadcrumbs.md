@@ -40,3 +40,7 @@
 - `getBetaRelease()` added to `app/page.tsx` (GitHub releases API, finds first non-draft prerelease, 24h revalidate).
 - `body` overflow-x switched hidden → clip so the sticky bar pins correctly.
 - Verified: lint clean, prod build OK, headless screenshot confirms layout.
+
+## 2026-09-25
+
+- Rebrand + mockup refresh (see `docs/choices.md`). New: `components/brand.tsx` (Logo/Marker/Tint), `components/panel/spend-card.tsx`, `lib/github.ts` (GitHub data layer split out of `app/page.tsx`, which was 521 LOC). Favicon gradient → `#1B51FB`→`#0731F8`. `tsc`, `eslint`, `next build` pass; checked in browser at ~2000px, 1440px, and 390px.

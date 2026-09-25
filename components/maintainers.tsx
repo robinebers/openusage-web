@@ -66,64 +66,49 @@ const maintainers: Maintainer[] = [
 
 export function Maintainers() {
   return (
-    <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
-      <div className="mb-12 text-center">
-        <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-pretty">
-          Meet the Maintainers
-        </h2>
-        <p
-          className="text-balance mx-auto mt-3 max-w-md text-sm lg:text-base"
-          style={{ color: "var(--page-fg-muted)" }}
-        >
-          The people keeping OpenUsage sharp, one provider at a time.
-        </p>
-      </div>
+    <section className="mx-auto flex w-full max-w-[1240px] flex-col gap-10 border-t border-line px-gutter py-[clamp(56px,7vw,88px)]">
+      <h2 className="display text-[clamp(34px,4.5vw,60px)] leading-[.95]">
+        Meet the maintainers.
+        <br />
+        <span className="text-brand">Keeping it sharp, one provider at a time.</span>
+      </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-3">
         {maintainers.map((m) => (
-          <div
-            key={m.name}
-            className="flex flex-col items-center text-center rounded-2xl p-6"
-            style={{
-              border: "1px solid var(--page-card-border)",
-              backgroundColor: "var(--page-card)",
-            }}
-          >
-            <Image
-              src={m.avatar}
-              alt={m.name}
-              width={80}
-              height={80}
-              className="rounded-full ring-2 ring-[var(--page-border)]"
-            />
-            <h3 className="mt-4 text-base font-bold text-pretty">{m.name}</h3>
-            <p
-              className="mt-1.5 text-sm leading-relaxed text-pretty flex-1"
-              style={{ color: "var(--page-fg-muted)" }}
-            >
-              {m.subtitle}
-            </p>
-            <div className="mt-4 flex items-center justify-center gap-3">
-              {m.links.map((link) => {
-                const { icon, label: defaultLabel } = linkMeta[link.type];
-                const label = link.label ?? defaultLabel;
-                return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${m.name} on ${label}`}
-                    title={label}
-                    className="transition-colors hover:text-[var(--page-accent)]"
-                    style={{ color: "var(--page-fg-subtle)" }}
-                  >
-                    <HugeiconsIcon icon={icon} className="w-5 h-5" />
-                  </a>
-                );
-              })}
+          <figure key={m.name} className="flex flex-col gap-3.5 border-t-4 border-brand pt-4.5">
+            <div className="flex items-center gap-3.5">
+              <Image
+                src={m.avatar}
+                alt={m.name}
+                width={52}
+                height={52}
+                className="size-13 rounded-full object-cover"
+              />
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[19px] leading-tight font-bold tracking-[-.02em]">{m.name}</h3>
+                <div className="flex items-center gap-2.5 text-muted">
+                  {m.links.map((link) => {
+                    const { icon, label: defaultLabel } = linkMeta[link.type];
+                    const label = link.label ?? defaultLabel;
+                    return (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${m.name} on ${label}`}
+                        title={label}
+                        className="transition-colors hover:text-brand"
+                      >
+                        <HugeiconsIcon icon={icon} className="h-4 w-4" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-          </div>
+            <p className="text-pretty text-[17px] leading-normal">{m.subtitle}</p>
+          </figure>
         ))}
       </div>
     </section>

@@ -9,8 +9,6 @@ import {
   ClaudeIcon,
   CodexIcon,
   CursorIcon,
-  DevinIcon,
-  GrokIcon,
 } from "@/lib/icons";
 import { useDemoStripGroups, useLayoutReady } from "@/lib/demo-timeline";
 import { Panel } from "@/components/panel/panel";
@@ -25,8 +23,6 @@ const STRIP_ICONS: Record<ProviderId, typeof ClaudeIcon> = {
   claude: ClaudeIcon,
   codex: CodexIcon,
   cursor: CursorIcon,
-  devin: DevinIcon,
-  grok: GrokIcon,
 };
 
 /** A provider's pinned values: one large number, or two tight stacked lines (read positionally). */
@@ -127,7 +123,7 @@ function TimeDisplay() {
 
   return (
     <span
-      className="text-[13px] font-medium whitespace-nowrap"
+      className="text-[13px] font-medium whitespace-nowrap max-sm:hidden"
       style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
       suppressHydrationWarning
     >

@@ -2,7 +2,7 @@
 
 import { track } from "@vercel/analytics";
 import { cn } from "@/lib/utils";
-import { secondaryButtonClass } from "@/lib/button-styles";
+import { primaryButtonClass, secondaryButtonClass } from "@/lib/button-styles";
 
 interface DownloadButtonsProps {
   stableUrl: string;
@@ -27,7 +27,7 @@ export function DownloadButtons({
   return (
     <div
       className={cn(
-        "flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4",
+        "flex w-full flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-3",
         centered && "sm:justify-center"
       )}
     >
@@ -37,15 +37,11 @@ export function DownloadButtons({
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track(`${eventPrefix}_download_clicked`)}
-        className="inline-flex flex-col items-center justify-center rounded-lg px-6 py-2.5 transition-all hover:brightness-110 sm:min-w-[176px]"
-        style={{
-          backgroundColor: "var(--page-accent)",
-          color: "var(--page-accent-fg)",
-        }}
+        className={cn(primaryButtonClass, "flex-col px-7 py-3 sm:min-w-[190px]")}
       >
-        <span className="text-sm font-semibold">Download Latest</span>
+        <span className="text-[16px] leading-tight">Download Latest</span>
         {stableVersion && (
-          <span className="font-mono text-[11px] font-normal leading-tight opacity-80">
+          <span className="font-mono text-[11px] font-normal leading-tight opacity-75">
             v{stableVersion}
           </span>
         )}
@@ -57,14 +53,11 @@ export function DownloadButtons({
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track(`${eventPrefix}_beta_clicked`)}
-        className={cn(
-          secondaryButtonClass,
-          "flex-col px-6 py-2.5 sm:min-w-[176px]"
-        )}
+        className={cn(secondaryButtonClass, "flex-col px-7 py-3 sm:min-w-[190px]")}
       >
-        <span className="text-sm font-semibold">Join the Beta</span>
+        <span className="text-[16px] leading-tight">Join the Beta</span>
         {betaVersion && (
-          <span className="font-mono text-[11px] font-normal leading-tight opacity-70">
+          <span className="font-mono text-[11px] font-normal leading-tight text-muted">
             v{betaVersion}
           </span>
         )}
