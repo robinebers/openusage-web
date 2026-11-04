@@ -185,3 +185,14 @@
 - Features rewritten around what the app ships now (Total Spend, pace warnings, menu bar pins, Customize, multi-account + iCloud, screen-share hiding).
 - Footer newsletter → `https://robinebers.com` (per request).
 - Not updated: `app/opengraph-image.png` / `twitter-image.png` are static PNGs still in the old blue.
+
+## 2026-11-04
+
+### Hero: launch trailer in a Safari window (Paper direction A, SCO-101)
+
+- Hero rebuilt to Robin's pick, direction A of the "OpenUsage Landing" Paper file: nav, NEW pill, centered headline, Download + brew copy pill, provider row, then the 27 s launch trailer in a Safari window. The rest of the page is unchanged; the Features section got `id="features"` for the nav link.
+- Old hero mock removed: `components/menu-bar.tsx`, `components/panel/*`, `lib/demo-timeline.ts`, `lib/mock-data.ts`, `lib/types.ts`, the macOS menu bar icons, and the `.panel` / menu bar / meter CSS. Nothing else used them.
+- Colors: the hero uses the app's own blue `#2B7EFF` (app icon + trailer) and `#1A66F0` for the button (white text passes 5:1). They're new `ou-*` tokens; the rest of the site keeps `#0731f8`.
+- Versions stay live: Download shows `releases/latest`. The NEW pill links to the stable release once it's 0.8.0+, else the newest `0.8.0-*` pre-release, else the releases page (`newInReleaseUrl` in `lib/github.ts`).
+- Video: four MP4s in `public/trailer/` (served by Vercel's CDN like the other static assets; no Blob needed at ~10 MB). AV1 first, H.264 fallback; 1080p at ≥768 px, 720p below. AV1 in MP4, not WebM, because Safari only plays AV1 in MP4; at the same SSIM it's ~45% smaller than H.264. AAC 128 kbps audio, faststart. `preload="none"`: nothing downloads until play. Poster is the 17.2 s frame as AVIF/WebP/JPEG at 960/1920 w.
+
