@@ -1,7 +1,6 @@
 import { Github } from "lucide-react";
-import { MenuBar, MenuBarTray } from "@/components/menu-bar";
-import { Panel } from "@/components/panel/panel";
 import { HeroContent } from "@/components/hero-content";
+import { SiteNav } from "@/components/site-nav";
 import { ProviderGrid } from "@/components/provider-grid";
 import { TrackedLink } from "@/components/tracked-link";
 import { DownloadButtons } from "@/components/download-buttons";
@@ -16,6 +15,7 @@ import {
   getBetaRelease,
   getContributors,
   getStableRelease,
+  newInReleaseUrl,
   type Contributor,
 } from "@/lib/github";
 
@@ -68,48 +68,20 @@ export default async function Home() {
     betaUrl: beta?.url ?? RELEASES_URL,
     betaVersion: beta?.version ?? null,
   };
-  // The demo panel mocks the shipping app, so it shows the latest stable version.
-  const panelVersion = stable?.version ?? null;
 
   return (
     <div className="min-h-screen bg-white">
-      {/* ── Menu bar + hero (positioning context for the popover) ── */}
-      <div className="relative">
-        {/* Full macOS menu bar — desktop only. The popover hangs off the tray
-            icon inside the bar, so it's positioned by CSS (no JS measurement)
-            and renders visible in the server HTML. */}
-        <div className="max-lg:hidden">
-          <MenuBar version={panelVersion} />
-        </div>
-
-        <section className="mx-auto max-w-[1240px] px-gutter">
-          <div className="lg:min-h-[760px]">
-            <HeroContent {...downloads} />
-          </div>
-        </section>
-
-        {/* Mobile: tray bar + panel below the hero */}
-        <div className="flex flex-col items-center pb-14 md:items-end lg:hidden">
-          <div
-            className="flex h-[28px] w-full items-center justify-end px-4 select-none"
-            style={{
-              background: "var(--bar-bg)",
-              color: "var(--bar-fg)",
-              fontFamily: "system-ui, -apple-system, sans-serif",
-            }}
-          >
-            <MenuBarTray trayIconId="tray-icon-mobile" />
-          </div>
-          <div className="flex w-full flex-col items-center px-3 pt-2 md:items-end md:px-12">
-            <Panel version={panelVersion} placement="flow" />
-          </div>
-        </div>
-      </div>
+      <SiteNav downloadUrl={downloads.stableUrl} />
+      <HeroContent
+        stableUrl={downloads.stableUrl}
+        stableVersion={downloads.stableVersion}
+        newInUrl={newInReleaseUrl(stable, beta)}
+      />
 
       <ProviderGrid />
 
       {/* ── Features ── */}
-      <section className="mx-auto flex w-full max-w-[1240px] flex-col gap-12 border-t border-line px-gutter py-[clamp(56px,7vw,88px)]">
+      <section id="features" className="scroll-mt-6 mx-auto flex w-full max-w-[1240px] flex-col gap-12 border-t border-line px-gutter py-[clamp(56px,7vw,88px)]">
         <h2 className="display text-[clamp(34px,4.5vw,60px)] leading-[.95]">
           Never wonder again.
           <br />

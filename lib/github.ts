@@ -21,7 +21,7 @@ export interface Contributor {
   contributions: number;
 }
 
-interface Release {
+export interface Release {
   version: string;
   url: string;
 }
@@ -63,6 +63,26 @@ export async function getBetaRelease(): Promise<Release | null> {
   } catch {
     return null;
   }
+}
+
+/** The release the hero's "NEW in 0.8.0" pill links to: the stable release once
+ *  it's 0.8.0 or later, otherwise the newest 0.8.0 pre-release, otherwise the
+ *  releases page. */
+export const NEW_IN_VERSION = "0.8.0";
+
+function isAtLeast(version: string, min: string): boolean {
+  const parts = (v: string) => v.split("-")[0].split(".").map(Number);
+  const [a, b] = [parts(version), parts(min)];
+  for (let i = 0; i < 3; i++) {
+    if ((a[i] ?? 0) !== (b[i] ?? 0)) return (a[i] ?? 0) > (b[i] ?? 0);
+  }
+  return true;
+}
+
+export function newInReleaseUrl(stable: Release | null, beta: Release | null): string {
+  if (stable && isAtLeast(stable.version, NEW_IN_VERSION)) return stable.url;
+  if (beta?.version.startsWith(`${NEW_IN_VERSION}-`)) return beta.url;
+  return RELEASES_URL;
 }
 
 /** Contributors shown on the wall. The Swift rewrite lives on a fresh `main`

@@ -44,3 +44,8 @@
 ## 2026-09-25
 
 - Rebrand + mockup refresh (see `docs/choices.md`). New: `components/brand.tsx` (Logo/Marker/Tint), `components/panel/spend-card.tsx`, `lib/github.ts` (GitHub data layer split out of `app/page.tsx`, which was 521 LOC). Favicon gradient → `#1B51FB`→`#0731F8`. `tsc`, `eslint`, `next build` pass; checked in browser at ~2000px, 1440px, and 390px.
+
+## 2026-11-04
+
+- New hero (SCO-101): `components/site-nav.tsx`, `components/hero-content.tsx`, `components/trailer.tsx`, `components/copy-command.tsx` (now a pill button), `AppMark`/`AppLogo` in `components/brand.tsx`, `OpenUsageIcon` in `lib/icons.tsx`. Media in `public/trailer/`. Verified: `tsc`, `eslint`, `next build`; headless Chrome at 1440 and 390 plays the trailer inline with sound (AV1 1080p on desktop, AV1 720p on mobile).
+

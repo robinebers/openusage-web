@@ -203,73 +203,19 @@ export function AppleIcon(props: IconProps) {
   );
 }
 
-type PixelTriplet = readonly [x: number, y: number, alphaByte: number];
-
-function base64ToBytes(b64: string): Uint8Array {
-  // Browser: atob. Server: Buffer.
-  if (typeof atob === "function") {
-    const bin = atob(b64);
-    const out = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-    return out;
-  }
-  if (typeof Buffer !== "undefined") {
-    return Uint8Array.from(Buffer.from(b64, "base64"));
-  }
-  throw new Error("No base64 decoder available in this runtime.");
-}
-
-function decodePixelTriplets(b64: string): PixelTriplet[] {
-  const bytes = base64ToBytes(b64);
-  const out: PixelTriplet[] = [];
-  for (let i = 0; i < bytes.length; i += 3) {
-    out.push([bytes[i]!, bytes[i + 1]!, bytes[i + 2]!]);
-  }
-  return out;
-}
-
-const CONTROL_CENTER_PIXELS: PixelTriplet[] = decodePixelTriplets(
-  "AgAxAwC9BADlBQDlBgDlBwDlCADlCQDlCgDlCwDlDADlDQDlDgDlDwDlEADlEQDlEgDlEwDlFADlFQDlFgDaFwBwAQFDAgHiAwHlBAHlBQHkBgHPBwHMCAHMCQHMCgHMCwHMDAHMDQHMDgHMDwHMEAHMEQHMEgHMEwHMFAHdFQHlFgHlFwHlGAGdAAIQAQLcAgLlAwLdBAJlBQITBgIqBwIvCAIvCQIvCgIvCwIOFQI8FgK9FwLlGALlGQJoAAN7AQPlAgPlAwNFBANgBQPdBgPlBwPlCAPlCQPlCgPlCwPkDAOCFgMNFwPJGAPlGQPTAATAAQTlAgSyAwQsBATlBQTlBgTlBwTlCATlCQTlCgTlCwTlDATlDQRYFwReGATlGQTlAAXdAQXlAgWBAwVwBAXlBQXlBgXlBwXlCAXlCQXlCgXlCwXlDAXlDQWbFwUvGAXlGQXlAAbXAQblAgaJAwZjBAblBQblBgblBwblCAblCQblCgblCwblDAblDQaQFwY2GAblGQblAAexAQflAgfIAwcVBAfXBQflBgflBwflCAflCQflCgflCwflDAfkDQc0Fwd6GAflGQflAAhjAQjlAgjlAwh7BAgpBQijBgjQBwjVCAjWCQjWCgjTCwiyDAg/FggyFwjdGAjlGQi9AQnFAgnlAwnlBAmpBQlNBgkpBwkkCAkmCQkmCgkmCwkmDAkmDQkmDgkmDwknEAkoEQknEgkpEwkpFAk8FQmCFgneFwnlGAnlGQlAAQogAgrKAwrlBArlBQrlBgrlBwrlCArlCQrlCgrlCwrlDArlDQrlDgrlDwrlEArlEQrlEgrmEwrlFArlFQrmFgrlFwrjGApjAgsMAwt/BAvWBQvlBgvlBwvlCAvlCQvlCgvlCwvlDAvlDQvlDgvlDwvlEAvlEQvlEgvmEwvlFAvlFQvjFguoFws1BQwoBgw6Bww/CAxACQw/Cgw/Cww/DAxADQxADgxADwxAEAxCEQxAEgxCEwxAFAwzFQwTAw4aBA5gBQ6EBg6NBw6NCA6OCQ6OCg6PCw6PDA6PDQ6PDg6PDw6PEA6PEQ6PEg6QEw6PFA6LFQ51Fg45Ag+AAw/hBA/lBQ/lBg/lBw/lCA/lCQ/lCg/lCw/lDA/lDQ/lDg/lDw/lEA/mEQ/mEg/mEw/mFA/mFQ/mFg/mFw+2GA8mARCbAhDlAxDlBBDlBRDlBhDlBxDlCBDlCRDmChDmCxDlDBDlDRDlDhDlDxDXEBC9ERC8EhC8ExC8FBC+FRDYFhDmFxDmGBDTGRAjABFOARHlAhHlAxHlBBHlBRHlBhHlBxHlCBHlCRHlChHmCxHlDBHmDRHeDhFYFhFZFxHeGBHmGRGmABKqARLlAhLlAxLlBBLlBRLlBhLlBxLlCBLlCRLlChLmCxLlDBLmDRJgFxJiGBLmGRLmABPWARPlAhPlAxPlBBPlBRPmBhPlBxPlCBPlCRPlChPmCxPlDBPmDRMOFxMQGBPmGRPmABTeARTlAhTlAxTlBBTlBRTmBhTlBxTlCBTmCRTmChTlCxTmDBTjGBTjGRTmABXAARXlAhXlAxXlBBXlBRXmBhXlBxXlCBXmCRXmChXmCxXmDBXmDRU6FxU5GBXmGRXmABZ3ARblAhblAxbmBBbmBRbmBhblBxbmCBbmCRbmChbmCxbmDBbmDRa+DhYXFhYXFxa9GBbmGRbMABcQARfPAhfmAxflBBflBRfmBhfmBxfmCBfmCRfmChfmCxfmDBfmDRfmDhfXDxeJEBdsERdpEhdqExdpFBdrFReJFhfWFxfmGBfmGRdSARgpAhjLAxjmBBjmBRjmBhjmBxjmCBjmCRjmChjmCxjmDBjmDRjmDhjmDxjmEBjmERjmEhjmExjmFBjmFRjmFhjmFxjjGBhqAhkPAxlvBBm5BRnbBhnmBxnmCBnmCRnmChnmCxnmDBnmDRnmDhnmDxnmEBnmERnmEhnmExnmFBniFRnLFhmRFxkw"
-);
-
-export function WifiIcon(props: IconProps) {
-  /* Traced from macOS SF Symbol "wifi" (medium weight, 16× render + potrace) */
-  return (
-    <svg viewBox="80 254 4060 2672" fill="currentColor" {...props}>
-      <g transform="translate(0,3200) scale(0.1,-0.1)">
-        <path d="M20470 29259 c-3746 -99 -7561 -1082 -10915 -2811 -154 -80 -316 -165 -360 -190 -44 -25 -168 -94 -275 -153 -2355 -1298 -4391 -2956 -5914 -4815 -209 -255 -259 -527 -146 -800 57 -138 107 -197 490 -585 2019 -2044 1976 -2002 2092 -2068 207 -119 503 -126 721 -16 116 59 178 110 359 297 3959 4082 8897 6172 14582 6172 5602 0 10449 -1992 14337 -5890 l506 -508 94 -46 c273 -134 589 -102 839 87 78 58 2321 2288 2381 2367 235 307 217 659 -50 990 -1444 1793 -3553 3514 -5882 4800 -112 62 -260 144 -329 183 -69 38 -269 143 -445 233 -3718 1893 -7971 2862 -12085 2753z M20505 19970 c-4339 -167 -8462 -1973 -10997 -4820 -342 -383 -418 -520 -418 -750 0 -258 64 -359 495 -781 1798 -1759 2284 -2231 2337 -2272 272 -206 640 -202 932 11 34 25 219 203 411 397 2564 2582 6249 3767 9725 3129 2302 -422 4512 -1607 6135 -3288 371 -385 563 -468 878 -382 242 66 260 82 1497 1291 113 110 351 342 530 516 1078 1047 1022 984 1080 1213 74 295 -8 490 -382 911 -2491 2798 -6478 4576 -10798 4815 -251 14 -1154 20 -1425 10z M20815 10769 c-648 -28 -1600 -221 -2000 -405 -16 -7 -71 -29 -121 -48 -1088 -412 -2133 -1169 -2838 -2056 -177 -222 -225 -355 -199 -539 32 -216 105 -324 441 -649 459 -444 1538 -1490 1902 -1843 2130 -2069 2175 -2111 2510 -2315 433 -264 856 -247 1297 52 273 185 442 343 2248 2089 149 144 353 341 455 440 1131 1090 1568 1511 1688 1625 256 242 340 389 358 625 23 288 -105 496 -620 1011 -1361 1359 -3236 2096 -5121 2013z" />
-      </g>
-    </svg>
-  );
-}
-
-export function ControlCenterIcon(props: IconProps) {
-  return (
-    <svg
-      viewBox="0 0 26 26"
-      fill="currentColor"
-      shapeRendering="crispEdges"
-      {...props}
-    >
-      {CONTROL_CENTER_PIXELS.map(([x, y, a], i) => (
-        <rect
-          key={i}
-          x={x}
-          y={y}
-          width="1"
-          height="1"
-          fill="currentColor"
-          fillOpacity={a / 255}
-        />
-      ))}
-    </svg>
-  );
-}
-
 export function GaugeIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM15.8329 7.33748C16.0697 7.17128 16.3916 7.19926 16.5962 7.40381C16.8002 7.60784 16.8267 7.92955 16.6587 8.16418C14.479 11.2095 13.2796 12.8417 13.0607 13.0607C12.4749 13.6464 11.5251 13.6464 10.9393 13.0607C10.3536 12.4749 10.3536 11.5251 10.9393 10.9393C11.3126 10.5661 12.9438 9.36549 15.8329 7.33748ZM17.5 11C18.0523 11 18.5 11.4477 18.5 12C18.5 12.5523 18.0523 13 17.5 13C16.9477 13 16.5 12.5523 16.5 12C16.5 11.4477 16.9477 11 17.5 11ZM6.5 11C7.05228 11 7.5 11.4477 7.5 12C7.5 12.5523 7.05228 13 6.5 13C5.94772 13 5.5 12.5523 5.5 12C5.5 11.4477 5.94772 11 6.5 11ZM8.81802 7.40381C9.20854 7.79433 9.20854 8.4275 8.81802 8.81802C8.4275 9.20854 7.79433 9.20854 7.40381 8.81802C7.01328 8.4275 7.01328 7.79433 7.40381 7.40381C7.79433 7.01328 8.4275 7.01328 8.81802 7.40381ZM12 5.5C12.5523 5.5 13 5.94772 13 6.5C13 7.05228 12.5523 7.5 12 7.5C11.4477 7.5 11 7.05228 11 6.5C11 5.94772 11.4477 5.5 12 5.5Z" />
+    </svg>
+  );
+}
+
+/** The OpenUsage app mark (the "U" gauge from the app icon). */
+export function OpenUsageIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M3.24 2.78v12.17C3.24 19.4 6.84 23 11.29 23h1.42c4.45 0 8.05-3.6 8.05-8.05V2.78C20.76 1.8 19.96 1 18.98 1c-.99 0-1.78.8-1.78 1.78v12.17c0 2.48-2.01 4.49-4.49 4.49h-1.42c-2.48 0-4.49-2.01-4.49-4.49V2.78C6.8 1.8 6.01 1 5.02 1c-.98 0-1.78.8-1.78 1.78ZM8.37 10.33c2.61-.5 4.65.5 7.26 0v4.62c0 1.62-1.31 2.92-2.92 2.92h-1.42c-1.61 0-2.92-1.3-2.92-2.92Z" />
     </svg>
   );
 }
