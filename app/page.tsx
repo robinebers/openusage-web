@@ -6,8 +6,8 @@ import { TrackedLink } from "@/components/tracked-link";
 import { DownloadButtons } from "@/components/download-buttons";
 import { ApiExample } from "@/components/api-example";
 import { Maintainers } from "@/components/maintainers";
-import { Logo, Marker, Tint } from "@/components/brand";
-import { cn } from "@/lib/utils";
+import { AppLogo, Marker, Tint } from "@/components/brand";
+import { cn, external } from "@/lib/utils";
 import { secondaryButtonClass } from "@/lib/button-styles";
 import {
   RELEASES_URL,
@@ -41,8 +41,8 @@ const FEATURES = [
     body: "Track several Claude and Codex accounts side by side, with usage history synced over iCloud.",
   },
   {
-    title: "No login, no leaks",
-    body: "It reads the credentials already on your Mac, and hides your numbers while you share your screen.",
+    title: "No snooping, no guessing",
+    body: "Sign in to each provider right in the app. OpenUsage keeps those credentials in its own Keychain, never reads other tools' files or keys, and shows only what the provider reports.",
   },
 ];
 
@@ -52,8 +52,6 @@ const FOOTER_LINKS = [
   { event: "footer_twitter_clicked", href: "https://itsbyrob.in/x", label: "X" },
   { event: "footer_newsletter_clicked", href: "https://robinebers.com", label: "Newsletter" },
 ];
-
-const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export default async function Home() {
   const [stable, beta, contributors] = await Promise.all([
@@ -169,7 +167,7 @@ export default async function Home() {
             <Marker>by surprise.</Marker>
           </h2>
           <div className="flex w-full max-w-xl flex-col items-center gap-3.5">
-            <DownloadButtons eventPrefix="cta" align="center" {...downloads} />
+            <DownloadButtons eventPrefix="cta" {...downloads} />
             <p className="text-[15px] text-muted">
               Requires macOS 15+
               {downloads.stableVersion ? <> &middot; v{downloads.stableVersion}</> : null} &middot; MIT License
@@ -180,7 +178,7 @@ export default async function Home() {
 
       {/* ── Footer ── */}
       <footer className="flex flex-col items-center gap-3.5 border-t border-line px-gutter py-8 text-sm font-medium text-muted">
-        <Logo className="text-[17px] text-ink" />
+        <AppLogo />
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2.5">
           {FOOTER_LINKS.map((link) => (
             <TrackedLink key={link.label} event={link.event} href={link.href} {...external} className="hover:text-brand">

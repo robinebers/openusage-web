@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 
 /** AV1 first (about 40% smaller at the same quality), H.264 as the fallback. 1080p on
@@ -80,13 +80,9 @@ export function Trailer() {
   const [started, setStarted] = useState(false);
   const [playing, setPlaying] = useState(false);
 
-  // The play button unmounts on start, so hand keyboard focus to the video.
-  useEffect(() => {
-    if (started) videoRef.current?.focus();
-  }, [started]);
-
   function play() {
     setStarted(true);
+    videoRef.current?.focus();
     videoRef.current?.play().catch((error) => console.error("Trailer playback failed", error));
     track("hero_trailer_played");
   }
