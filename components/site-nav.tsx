@@ -3,8 +3,8 @@ import { AppLogo } from "@/components/brand";
 import { TrackedLink } from "@/components/tracked-link";
 import { RELEASES_URL, REPO_URL } from "@/lib/github";
 import { focusRing } from "@/lib/button-styles";
+import { external } from "@/lib/utils";
 
-const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const link = `rounded-[4px] text-[16px] font-medium text-subtle transition-colors hover:text-ink max-md:hidden ${focusRing}`;
 
 export function SiteNav({ downloadUrl }: { downloadUrl: string }) {

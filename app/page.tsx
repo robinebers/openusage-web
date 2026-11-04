@@ -6,8 +6,8 @@ import { TrackedLink } from "@/components/tracked-link";
 import { DownloadButtons } from "@/components/download-buttons";
 import { ApiExample } from "@/components/api-example";
 import { Maintainers } from "@/components/maintainers";
-import { Logo, Marker, Tint } from "@/components/brand";
-import { cn } from "@/lib/utils";
+import { AppLogo, Marker, Tint } from "@/components/brand";
+import { cn, external } from "@/lib/utils";
 import { secondaryButtonClass } from "@/lib/button-styles";
 import {
   RELEASES_URL,
@@ -21,28 +21,28 @@ import {
 
 const FEATURES = [
   {
-    title: "Total Spend at a glance",
-    body: "See what Claude, Codex, Cursor and Grok cost today, yesterday or over 30 days, all in one ring.",
+    title: "What's running out, first",
+    body: "Priority lists the limits running low, soonest to run out at your pace first, then what's used up and which accounts need you.",
   },
   {
-    title: "Know before you run out",
-    body: "Pace markers and flame warnings tell you when you're burning too fast, and exactly when you'll hit the wall.",
-  },
-  {
-    title: "Pinned to your menu bar",
-    body: "Star up to two metrics per provider. Just look up and know where you stand.",
+    title: "Right in your menu bar",
+    body: "The limits closest to running out sit in the menu bar on their own, up to five. Just look up and know where you stand.",
   },
   {
     title: "Arranged your way",
-    body: "Turn providers and metrics on or off, drag them into order, and tuck the rest behind a tap.",
+    body: "Pin the metrics you care about, hide the rest, and drag accounts and metrics into your order.",
   },
   {
-    title: "Every account, every Mac",
-    body: "Track several Claude and Codex accounts side by side, with usage history synced over iCloud.",
+    title: "Every account, side by side",
+    body: "Add every Claude, ChatGPT or Cursor account you pay for, personal and work, and give each one a name.",
   },
   {
-    title: "No login, no leaks",
-    body: "It reads the credentials already on your Mac, and hides your numbers while you share your screen.",
+    title: "A heads-up before you run out",
+    body: "Get a notification when a limit drops under 30% left, and hover a bar to see where your pace lands at reset.",
+  },
+  {
+    title: "Your keys stay yours",
+    body: "Sign in to each account inside the app. OpenUsage never reads other tools' credentials, and it can hide your usage from the menu bar while you share your screen.",
   },
 ];
 
@@ -52,8 +52,6 @@ const FOOTER_LINKS = [
   { event: "footer_twitter_clicked", href: "https://itsbyrob.in/x", label: "X" },
   { event: "footer_newsletter_clicked", href: "https://robinebers.com", label: "Newsletter" },
 ];
-
-const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export default async function Home() {
   const [stable, beta, contributors] = await Promise.all([
@@ -99,7 +97,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Local API + CLI ── */}
+      {/* ── CLI ── */}
       <section className="border-t border-line px-gutter py-[clamp(56px,7vw,88px)]">
         <div className="mx-auto grid max-w-[1240px] overflow-hidden rounded-[20px] border border-line lg:grid-cols-[1fr_1.1fr]">
           <div className="flex flex-col gap-5 border-b border-line p-[clamp(28px,4vw,56px)] lg:border-r lg:border-b-0">
@@ -109,15 +107,12 @@ export default async function Home() {
             <p className="text-pretty text-[clamp(17px,1.8vw,20px)] leading-normal">
               Think of it like a weather station. OpenUsage does all the
               measuring. Your status line, your editor, your agents? They just
-              read the forecast through a <Tint>local API</Tint> or the{" "}
-              <Tint>openusage</Tint> command. No tokens, no auth, no setup.
+              read the forecast with the <Tint>openusage</Tint> command, as JSON.
+              No tokens, no network calls.
             </p>
             <div className="mt-auto flex flex-col gap-1.5 font-mono text-[14px]">
               <p>
-                <span className="text-muted">$ </span>curl{" "}
-                <a href="http://localhost:6736/v1/limits" {...external} className="underline decoration-line underline-offset-4 hover:text-brand">
-                  localhost:6736/v1/limits
-                </a>
+                <span className="text-muted">$ </span>openusage
               </p>
               <p>
                 <span className="text-muted">$ </span>openusage claude
@@ -169,7 +164,7 @@ export default async function Home() {
             <Marker>by surprise.</Marker>
           </h2>
           <div className="flex w-full max-w-xl flex-col items-center gap-3.5">
-            <DownloadButtons eventPrefix="cta" align="center" {...downloads} />
+            <DownloadButtons eventPrefix="cta" {...downloads} />
             <p className="text-[15px] text-muted">
               Requires macOS 15+
               {downloads.stableVersion ? <> &middot; v{downloads.stableVersion}</> : null} &middot; MIT License
@@ -180,7 +175,7 @@ export default async function Home() {
 
       {/* ── Footer ── */}
       <footer className="flex flex-col items-center gap-3.5 border-t border-line px-gutter py-8 text-sm font-medium text-muted">
-        <Logo className="text-[17px] text-ink" />
+        <AppLogo />
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2.5">
           {FOOTER_LINKS.map((link) => (
             <TrackedLink key={link.label} event={link.event} href={link.href} {...external} className="hover:text-brand">
