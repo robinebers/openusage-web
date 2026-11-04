@@ -65,9 +65,7 @@ export async function getBetaRelease(): Promise<Release | null> {
   }
 }
 
-/** The release the hero's "NEW in 0.8.0" pill links to: the stable release once
- *  it's 0.8.0 or later, otherwise the newest 0.8.0 pre-release, otherwise the
- *  releases page. */
+/** The version the hero's "NEW" pill announces. */
 export const NEW_IN_VERSION = "0.8.0";
 
 function isAtLeast(version: string, min: string): boolean {
@@ -79,8 +77,10 @@ function isAtLeast(version: string, min: string): boolean {
   return true;
 }
 
+/** Where the "NEW" pill links: the stable release once it has shipped, else the
+ *  newest pre-release of it, else the releases page. */
 export function newInReleaseUrl(stable: Release | null, beta: Release | null): string {
-  if (stable && isAtLeast(stable.version, NEW_IN_VERSION)) return stable.url;
+  if (stable && isAtLeast(stable.version, NEW_IN_VERSION)) return `${RELEASES_URL}/tag/v${NEW_IN_VERSION}`;
   if (beta?.version.startsWith(`${NEW_IN_VERSION}-`)) return beta.url;
   return RELEASES_URL;
 }

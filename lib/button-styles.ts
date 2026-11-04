@@ -8,3 +8,7 @@ const base =
 export const primaryButtonClass = `${base} bg-brand text-white hover:bg-brand-deep`;
 
 export const secondaryButtonClass = `${base} border border-line bg-white text-ink hover:border-ink`;
+
+/** Blue focus ring for the hero's links and buttons. */
+export const focusRing =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ou-blue-strong";

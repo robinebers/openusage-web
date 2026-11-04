@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
 
 /** AV1 first (about 40% smaller at the same quality), H.264 as the fallback. 1080p on
@@ -78,18 +78,21 @@ function SafariToolbar() {
 export function Trailer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  // The play button unmounts on start, so hand keyboard focus to the video.
+  useEffect(() => {
+    if (started) videoRef.current?.focus();
+  }, [started]);
 
   function play() {
-    const video = videoRef.current;
-    if (!video) return;
     setStarted(true);
-    video.play().catch((error) => console.error("Trailer playback failed", error));
-    video.focus();
+    videoRef.current?.play().catch((error) => console.error("Trailer playback failed", error));
     track("hero_trailer_played");
   }
 
   return (
-    <div className="w-full max-w-[1240px] overflow-hidden rounded-xl border border-line bg-white shadow-[0_20px_50px_rgba(14,17,24,0.16)] md:rounded-[14px] md:shadow-[0_40px_100px_rgba(14,17,24,0.16),0_8px_24px_rgba(14,17,24,0.06)]">
+    <div className="w-full max-w-[1240px] overflow-hidden rounded-[12px] border border-line bg-white shadow-[0_20px_50px_rgba(14,17,24,0.16)] md:rounded-[14px] md:shadow-[0_40px_100px_rgba(14,17,24,0.16),0_8px_24px_rgba(14,17,24,0.06)]">
       <SafariToolbar />
       <div className="relative aspect-video bg-ou-blue">
         <video
@@ -98,34 +101,38 @@ export function Trailer() {
           preload="none"
           playsInline
           controls={started}
+          tabIndex={-1}
+          onPlaying={() => setPlaying(true)}
           aria-label="OpenUsage launch trailer"
         >
           {SOURCES.map((source) => (
             <source key={source.src} {...source} />
           ))}
         </video>
+        {/* Stays up until the first frame plays, so there's no blank flash on start. */}
+        {!playing && (
+          <picture className="pointer-events-none absolute inset-0">
+            <source type="image/avif" srcSet={posterSet("avif")} sizes={POSTER_SIZES} />
+            <source type="image/webp" srcSet={posterSet("webp")} sizes={POSTER_SIZES} />
+            <img
+              src="/trailer/poster-1920.jpg"
+              srcSet={posterSet("jpg")}
+              sizes={POSTER_SIZES}
+              alt=""
+              width={1920}
+              height={1080}
+              decoding="async"
+              className="size-full object-cover"
+            />
+          </picture>
+        )}
         {!started && (
           <button
             type="button"
-            data-trailer-play
             onClick={play}
             aria-label="Play the OpenUsage launch trailer, 27 seconds, with sound"
             className="group absolute inset-0 cursor-pointer focus-visible:outline-none"
           >
-            <picture>
-              <source type="image/avif" srcSet={posterSet("avif")} sizes={POSTER_SIZES} />
-              <source type="image/webp" srcSet={posterSet("webp")} sizes={POSTER_SIZES} />
-              <img
-                src="/trailer/poster-1920.jpg"
-                srcSet={posterSet("jpg")}
-                sizes={POSTER_SIZES}
-                alt=""
-                width={1920}
-                height={1080}
-                decoding="async"
-                className="absolute inset-0 size-full object-cover"
-              />
-            </picture>
             <span className="absolute top-1/2 left-1/2 flex size-14 -translate-1/2 items-center justify-center rounded-full bg-white/95 shadow-[0_12px_40px_rgba(14,17,24,0.35)] transition-transform group-hover:scale-105 group-focus-visible:outline-4 group-focus-visible:outline-offset-4 group-focus-visible:outline-white md:size-24">
               <svg viewBox="0 0 17 19" className="ml-[8%] h-[38%] w-[34%]" aria-hidden>
                 <path d="M2 1.8v15.4c0 .8.9 1.3 1.6.9l12.6-7.7c.6-.4.6-1.3 0-1.7L3.6.9C2.9.5 2 1 2 1.8z" fill="var(--color-ou-blue-strong)" />
