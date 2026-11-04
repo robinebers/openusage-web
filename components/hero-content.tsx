@@ -5,6 +5,7 @@ import { focusRing } from "@/lib/button-styles";
 import { CopyCommand } from "@/components/copy-command";
 import { TrackedLink } from "@/components/tracked-link";
 import { Trailer } from "@/components/trailer";
+import { external } from "@/lib/utils";
 
 interface HeroContentProps {
   stableUrl: string;
@@ -13,7 +14,6 @@ interface HeroContentProps {
   newInUrl: string;
 }
 
-const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const NAMED_PROVIDERS = 4;
 
 export function HeroContent({ stableUrl, stableVersion, newInUrl }: HeroContentProps) {

@@ -21,7 +21,7 @@ export interface Contributor {
   contributions: number;
 }
 
-export interface Release {
+interface Release {
   version: string;
   url: string;
 }

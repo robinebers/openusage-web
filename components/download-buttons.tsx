@@ -9,8 +9,6 @@ interface DownloadButtonsProps {
   stableVersion: string | null;
   betaUrl: string;
   betaVersion: string | null;
-  /** Hero is left-aligned; the bottom CTA is centered. */
-  align?: "start" | "center";
   /** Differentiates analytics events between placements (e.g. "hero", "cta"). */
   eventPrefix: string;
 }
@@ -20,17 +18,10 @@ export function DownloadButtons({
   stableVersion,
   betaUrl,
   betaVersion,
-  align = "start",
   eventPrefix,
 }: DownloadButtonsProps) {
-  const centered = align === "center";
   return (
-    <div
-      className={cn(
-        "flex w-full flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-3",
-        centered && "sm:justify-center"
-      )}
-    >
+    <div className="flex w-full flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:justify-center sm:gap-3">
       {/* Primary: latest stable */}
       <a
         href={stableUrl}

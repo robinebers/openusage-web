@@ -7,7 +7,7 @@ import { DownloadButtons } from "@/components/download-buttons";
 import { ApiExample } from "@/components/api-example";
 import { Maintainers } from "@/components/maintainers";
 import { AppLogo, Marker, Tint } from "@/components/brand";
-import { cn } from "@/lib/utils";
+import { cn, external } from "@/lib/utils";
 import { secondaryButtonClass } from "@/lib/button-styles";
 import {
   RELEASES_URL,
@@ -52,8 +52,6 @@ const FOOTER_LINKS = [
   { event: "footer_twitter_clicked", href: "https://itsbyrob.in/x", label: "X" },
   { event: "footer_newsletter_clicked", href: "https://robinebers.com", label: "Newsletter" },
 ];
-
-const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export default async function Home() {
   const [stable, beta, contributors] = await Promise.all([
@@ -166,7 +164,7 @@ export default async function Home() {
             <Marker>by surprise.</Marker>
           </h2>
           <div className="flex w-full max-w-xl flex-col items-center gap-3.5">
-            <DownloadButtons eventPrefix="cta" align="center" {...downloads} />
+            <DownloadButtons eventPrefix="cta" {...downloads} />
             <p className="text-[15px] text-muted">
               Requires macOS 15+
               {downloads.stableVersion ? <> &middot; v{downloads.stableVersion}</> : null} &middot; MIT License
