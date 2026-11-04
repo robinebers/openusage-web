@@ -40,25 +40,25 @@ function highlightJson(json: string) {
 }
 
 const response = `{
-  "schema": "openusage.limits.v1",
+  "schema": "openusage.limits.v2",
   "providers": {
-    "claude": {
-      "displayName": "Claude",
-      "plan": "Team 5x",
+    "claude@4f2a9c1e": {
+      "displayName": "Claude · Personal",
+      "plan": "Max",
+      "fetchedAt": "2026-11-04T09:41:00.000Z",
       "stale": false,
       "resources": {
         "weekly": {
           "kind": "consumption",
           "unit": "percent",
-          "used": 64,
+          "used": 42,
           "limit": 100,
-          "remaining": 36,
-          "resetsAt": "2026-09-26T15:00:00.000Z"
+          "remaining": 58,
+          "resetsAt": "2026-11-06T13:00:00.000Z"
         }
       }
     }
-  },
-  "errors": []
+  }
 }`;
 
 const highlighted = highlightJson(response);

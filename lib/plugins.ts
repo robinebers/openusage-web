@@ -21,12 +21,11 @@ export interface Plugin {
 
 /**
  * Providers OpenUsage currently tracks, in the Swift app's `ProviderCatalog`
- * order. `brandColor` follows the app's `TotalSpendPalette` (light mode);
- * providers missing from it use their near-black mark.
+ * order. `brandColor` is the colour of each provider's mark.
  */
 export const plugins: Plugin[] = [
   { id: "claude",      name: "Claude",      brandColor: "#DE7356", Icon: ClaudeIcon },
-  { id: "codex",       name: "Codex",       brandColor: "#10A37F", Icon: CodexIcon },
+  { id: "codex",       name: "ChatGPT",     brandColor: "#10A37F", Icon: CodexIcon },
   { id: "cursor",      name: "Cursor",      brandColor: "#13120A", Icon: CursorIcon },
   { id: "antigravity", name: "Antigravity", brandColor: "#4285F4", Icon: AntigravityIcon },
   { id: "copilot",     name: "Copilot",     brandColor: "#A855F7", Icon: CopilotIcon },
