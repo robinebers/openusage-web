@@ -22,7 +22,7 @@ import {
 const FEATURES = [
   {
     title: "What's running out, first",
-    body: "Priority sorts every limit by how soon it runs out at your pace, then shows what's used up and which accounts need you.",
+    body: "Priority lists the limits running low, soonest to run out at your pace first, then what's used up and which accounts need you.",
   },
   {
     title: "Right in your menu bar",
@@ -110,7 +110,7 @@ export default async function Home() {
               Think of it like a weather station. OpenUsage does all the
               measuring. Your status line, your editor, your agents? They just
               read the forecast with the <Tint>openusage</Tint> command, as JSON.
-              No tokens, no network calls, no setup.
+              No tokens, no network calls.
             </p>
             <div className="mt-auto flex flex-col gap-1.5 font-mono text-[14px]">
               <p>
