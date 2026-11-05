@@ -52,3 +52,4 @@
 ## 2026-11-05
 
 - Muse Code added to `lib/plugins.ts` + `MuseIcon` in `lib/icons.tsx` (SCO-122). Counts ("12 providers", "and 8 more") derive from `plugins.length`. Verified: `tsc`, `eslint`, `next build`; headless Chromium at 1440 and 390.
+- Stale copy fixed (SCO-123): alerts card, meta/OG/Twitter/JSON-LD description (now `providerSummary` in `lib/plugins.ts`, shared with the hero), and a real README. Verified: `tsc`, `eslint`, `next build`; headless Chromium at 1440 and 390.
