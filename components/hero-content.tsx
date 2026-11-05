@@ -62,7 +62,7 @@ export function HeroContent({ stableUrl, stableVersion, newInUrl }: HeroContentP
 
       {/* Phones show the provider row under the trailer. */}
       <div className="flex flex-col items-center gap-3 pt-7 pb-2 text-center max-md:order-last md:gap-3.5 md:pt-[38px] md:pb-14">
-        <div aria-hidden className="flex items-center gap-3 text-muted md:gap-[18px]">
+        <div aria-hidden className="flex items-center gap-2 text-muted md:gap-[18px]">
           {plugins.map(({ id, Icon }) => (
             <Icon key={id} className="size-[18px] md:size-[22px]" />
           ))}

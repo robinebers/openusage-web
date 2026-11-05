@@ -196,3 +196,10 @@
 - Versions stay live: Download shows `releases/latest`. The NEW pill links to the stable release once it's 0.8.0+, else the newest `0.8.0-*` pre-release, else the releases page (`newInReleaseUrl` in `lib/github.ts`).
 - Video: four MP4s in `public/trailer/` (served by Vercel's CDN like the other static assets; no Blob needed at ~10 MB). AV1 first, H.264 fallback; 1080p at ≥768 px, 720p below. AV1 in MP4, not WebM, because Safari only plays AV1 in MP4; at the same SSIM it's ~45% smaller than H.264. AAC 128 kbps audio, faststart. `preload="none"`: nothing downloads until play. Poster is the 17.2 s frame as AVIF/WebP/JPEG at 960/1920 w.
 
+## 2026-11-05
+
+### Muse Code in the provider list (SCO-122)
+
+- Added Muse Code (12 providers, `ProviderKind` order, after Grok). Mark is the app's `ProviderIcons/muse.svg` path. The app has no brand colours any more, so it gets `#000000` like the other monochrome marks (Devin, Grok, Ollama).
+- 12 providers + "Add yours" no longer fill the grid's last row, so "Add yours" spans the full row (`col-span-full`). 12 divides by 2, 3 and 4, so every breakpoint stays even.
+- Hero mark row on phones: gap 12px → 8px. Twelve marks at 12px gaps are 348px wide and clipped under 348px viewports (`body` is `overflow-x: clip`); at 8px they're 304px and fit 320px.
