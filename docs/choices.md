@@ -203,3 +203,4 @@
 - Added Muse Code (12 providers, `ProviderKind` order, after Grok). Mark is the app's `ProviderIcons/muse.svg` path. The app has no brand colours any more, so it gets `#000000` like the other monochrome marks (Devin, Grok, Ollama).
 - 12 providers + "Add yours" no longer fill the grid's last row, so "Add yours" spans the full row (`col-span-full`). 12 divides by 2, 3 and 4, so every breakpoint stays even.
 - Hero mark row on phones: gap 12px → 8px. Twelve marks at 12px gaps are 348px wide and clipped under 348px viewports (`body` is `overflow-x: clip`); at 8px they're 304px and fit 320px.
+- OG/Twitter image: "Copilot and 7 more" → "8 more" in Paper ("OpenUsage Landing", OG 1, node 106-0), re-exported at 1x.
