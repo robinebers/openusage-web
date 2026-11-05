@@ -23,7 +23,7 @@ export function ProviderGrid() {
             <span className="text-[17px] font-bold tracking-[-.02em]">{name}</span>
           </li>
         ))}
-        <li className={`${cell} bg-tint`}>
+        <li className={`${cell} col-span-full bg-tint`}>
           <a
             href={ADD_PROVIDER_URL}
             target="_blank"

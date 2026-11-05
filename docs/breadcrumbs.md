@@ -49,3 +49,6 @@
 
 - New hero (SCO-101): `components/site-nav.tsx`, `components/hero-content.tsx`, `components/trailer.tsx`, `components/copy-command.tsx` (now a pill button), `AppMark`/`AppLogo` in `components/brand.tsx`, `OpenUsageIcon` in `lib/icons.tsx`. Media in `public/trailer/`. Verified: `tsc`, `eslint`, `next build`; headless Chrome at 1440 and 390 plays the trailer inline with sound (AV1 1080p on desktop, AV1 720p on mobile).
 
+## 2026-11-05
+
+- Muse Code added to `lib/plugins.ts` + `MuseIcon` in `lib/icons.tsx` (SCO-122). Counts ("12 providers", "and 8 more") derive from `plugins.length`. Verified: `tsc`, `eslint`, `next build`; headless Chromium at 1440 and 390.
