@@ -38,3 +38,5 @@ export const plugins: Plugin[] = [
   { id: "openrouter",  name: "OpenRouter",  brandColor: "#6467F2", Icon: OpenRouterIcon },
   { id: "zai",         name: "Z.ai",        brandColor: "#2D2D2D", Icon: ZAIIcon },
 ];
+
+export const providerSummary = `Claude, ChatGPT, Cursor, Copilot and ${plugins.length - 4} more`;

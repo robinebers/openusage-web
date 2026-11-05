@@ -1,4 +1,4 @@
-import { plugins } from "@/lib/plugins";
+import { plugins, providerSummary } from "@/lib/plugins";
 import { AppleIcon } from "@/lib/icons";
 import { NEW_IN_VERSION } from "@/lib/github";
 import { focusRing } from "@/lib/button-styles";
@@ -13,8 +13,6 @@ interface HeroContentProps {
   /** Release the "NEW" pill points at (see `newInReleaseUrl`). */
   newInUrl: string;
 }
-
-const NAMED_PROVIDERS = 4;
 
 export function HeroContent({ stableUrl, stableVersion, newInUrl }: HeroContentProps) {
   return (
@@ -71,7 +69,7 @@ export function HeroContent({ stableUrl, stableVersion, newInUrl }: HeroContentP
           macOS 15+ · Free and open source
           <span className="max-md:hidden"> · </span>
           <br className="md:hidden" />
-          Claude, ChatGPT, Cursor, Copilot and {plugins.length - NAMED_PROVIDERS} more
+          {providerSummary}
         </p>
       </div>
 

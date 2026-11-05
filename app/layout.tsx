@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
+import { providerSummary } from "@/lib/plugins";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -13,8 +14,7 @@ const archivo = Archivo({
 const siteUrl = "https://www.openusage.ai";
 const title =
   "OpenUsage - AI Limits Tracker for Cursor, Claude Code, Codex and more";
-const description =
-  "Never hit your AI limits by surprise. See every AI coding subscription in your menu bar. Track Claude Code, Codex, Cursor, Devin and Grok. Free and open source for macOS.";
+const description = `Never hit your AI limits by surprise. See every AI coding subscription in your menu bar. Track ${providerSummary}. Free and open source for macOS.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

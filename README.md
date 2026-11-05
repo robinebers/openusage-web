@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# openusage-web
 
-## Getting Started
+The website for [OpenUsage](https://github.com/robinebers/openusage), a free, open-source macOS
+menu-bar app that tracks the usage limits of your AI coding plans. Live at
+[openusage.ai](https://www.openusage.ai).
 
-First, run the development server:
+It's a single-page Next.js app. The app itself, its docs, and its releases live in
+[robinebers/openusage](https://github.com/robinebers/openusage).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Run locally
+
+Installing needs `HUGEICONS_TOKEN` in your environment for the `@hugeicons-pro` packages (see
+`.npmrc`).
+
+```sh
+bun install
+bun dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Check and build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+bunx tsc --noEmit
+bun run lint
+bun run build
+bun run start  # serve the production build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`GITHUB_TOKEN` is optional. It lifts GitHub's rate limit on the release and contributor lookups.
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
+Vercel builds a preview for every pull request and deploys `main` to production.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Where things live
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `app/page.tsx`: page sections and feature copy
+- `app/layout.tsx`: title, descriptions, and structured data
+- `lib/plugins.ts`: the provider list, in the app's order, with display names and marks
+- `app/opengraph-image.png` and `app/twitter-image.png`: static share images, so their text
+  doesn't update with the page

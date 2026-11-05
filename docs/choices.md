@@ -204,3 +204,9 @@
 - 12 providers + "Add yours" no longer fill the grid's last row, so "Add yours" spans the full row (`col-span-full`). 12 divides by 2, 3 and 4, so every breakpoint stays even.
 - Hero mark row on phones: gap 12px → 8px. Twelve marks at 12px gaps are 348px wide and clipped under 348px viewports (`body` is `overflow-x: clip`); at 8px they're 304px and fit 320px.
 - OG/Twitter image: "Copilot and 7 more" → "8 more" in Paper ("OpenUsage Landing", OG 1, node 106-0), re-exported at 1x.
+
+### Stale copy vs the app (SCO-123)
+
+- Alerts card follows the app's four notifications: Warning and Critical (30% and 10% left by default, adjustable), Will Run Out, and Use It or Lose It. The hover-for-pace clause went to keep the card the same length as its neighbours.
+- Description, OG/Twitter and JSON-LD say "Claude, ChatGPT, Cursor, Copilot and N more", the same `providerSummary` string the hero uses, so the count follows `plugins.length`.
+- Title keeps "Cursor, Claude Code, Codex and more": those are the tool names people search, not the app's provider names.

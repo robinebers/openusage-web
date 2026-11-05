@@ -38,7 +38,7 @@ const FEATURES = [
   },
   {
     title: "A heads-up before you run out",
-    body: "Get a notification when a limit drops under 30% left, and hover a bar to see where your pace lands at reset.",
+    body: "Get notified at 30% and 10% left, or at levels you pick, when a limit will run out before it resets at your pace, and when a weekly or monthly limit is about to reset mostly unused.",
   },
   {
     title: "Your keys stay yours",
